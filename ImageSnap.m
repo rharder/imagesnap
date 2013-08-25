@@ -107,43 +107,90 @@
  */
 +(NSData *)dataFrom:(NSImage *)image asType:(NSString *)format{
     
-    NSData *tiffData = [image TIFFRepresentation];
+    CFStringRef imageType;
     
-    NSBitmapImageFileType imageType = NSJPEGFileType;
-    NSDictionary *imageProps = nil;
+    NSMutableData *photoData = [[NSMutableData alloc] init];
     
+    // create the image somehow, load from file, draw into it...
+    CGImageSourceRef source;
+    
+    source = CGImageSourceCreateWithData((CFDataRef)[image TIFFRepresentation], NULL);
+
+    //get all the metadata in the image
+    NSDictionary *metadata = (NSDictionary *) CGImageSourceCopyPropertiesAtIndex(source,0,NULL);
+    
+    //make the metadata dictionary mutable so we can add properties to it
+    NSMutableDictionary *metadataAsMutable = [metadata mutableCopy];
     
     // TIFF. Special case. Can save immediately.
     if( [@"tif"  rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ||
 	    [@"tiff" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ){
-        return tiffData;
+        imageType = kUTTypeTIFF;
     }
     
     // JPEG
     else if( [@"jpg"  rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound || 
              [@"jpeg" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ){
-        imageType = NSJPEGFileType;
-        imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.9] forKey:NSImageCompressionFactor];
+        imageType = kUTTypeJPEG;
+        
+        //get existing exif data dictionary
+        NSMutableDictionary *EXIFDictionary = [[metadataAsMutable objectForKey:(NSString *)kCGImagePropertyExifDictionary]mutableCopy];
+        
+        if(!EXIFDictionary) {
+            //if the image does not have an EXIF dictionary (not all images do), then create one for us to use
+            EXIFDictionary = [NSMutableDictionary dictionary];
+        }
+        
+        NSDate *today = [NSDate date];
+        
+        NSString *dateString = [today descriptionWithCalendarFormat:nil timeZone:nil locale:nil];
+        
+        //set DateTimeOriginal exif data
+        [EXIFDictionary setValue:dateString forKey:(NSString *)kCGImagePropertyExifDateTimeOriginal];
+        
+        //set DateCreated exif data
+        [EXIFDictionary setValue:dateString forKey:(NSString *)kCGImagePropertyExifDateTimeDigitized];
+        
+        //add our modified EXIF data back into the image’s metadata
+        [metadataAsMutable setObject:EXIFDictionary forKey:(NSString *)kCGImagePropertyExifDictionary];
+
+        //add compression in
+        [metadataAsMutable setObject:[NSNumber numberWithFloat:.9] forKey:(NSString *)kCGImageDestinationLossyCompressionQuality];
         
     }
     
     // PNG
     else if( [@"png" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ){
-        imageType = NSPNGFileType;
+        imageType = kUTTypePNG;
     }
     
     // BMP
     else if( [@"bmp" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ){
-        imageType = NSBMPFileType;
+        imageType = kUTTypeBMP;
     }
     
     // GIF
     else if( [@"gif" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ){
-        imageType = NSGIFFileType;
+        imageType = kUTTypeGIF;
+    }
+
+    CGImageDestinationRef destination = CGImageDestinationCreateWithData((CFMutableDataRef)photoData, imageType, 1, NULL);
+    
+    if(!destination) {
+        NSLog(@"***Could not create image destination ***");
     }
     
-    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:tiffData];
-    NSData *photoData = [imageRep representationUsingType:imageType properties:imageProps];
+    //add the image contained in the image source to the destination, overidding the old metadata with our modified metadata
+    CGImageDestinationAddImageFromSource(destination,source,0, (CFDictionaryRef) metadataAsMutable);
+
+    //tell the destination to write the image data and metadata into our data object.
+    if(!CGImageDestinationFinalize(destination)) {
+        NSLog(@"***Could not create data from image destination ***");
+    }
+    
+    //cleanup
+    CFRelease(destination);
+    CFRelease(source);
 
     return photoData;
 }   // end dataFrom
