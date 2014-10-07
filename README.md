@@ -67,10 +67,12 @@ $ open snapshot.jpg
 Add this to your git hooks in `.git/hooks/post-commit` and you'll be all set.
 
 ```rb
-#!/usr/bin/env ruby
-file="~/.gitshots/#{Time.now.to_i}.jpg"
-puts "Taking capture into #{file}!"
-system "imagesnap -q -w 3 #{file}"
+#!/bin/bash
+FILE="${HOME}/.gitshots/$(date +%s).jpg"
+if [ ! -f "../../rebase-merge" ]; then
+  echo "Taking capture into $FILE!"
+  imagesnap -q -w 3 $FILE &
+fi
 exit 0
 ```
 
