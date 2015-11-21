@@ -68,7 +68,7 @@
 
     NSArray *devices = [ImageSnap videoDevices];
     for( QTCaptureDevice *device in devices ){
-        if ( [name isEqualToString:[device description]] ){
+        if ( [name isEqualToString:device.description] ){
             result = device;
         }   // end if: match
     }   // end for: each device
@@ -80,14 +80,14 @@
 // Saves an image to a file or standard out if path is nil or "-" (hyphen).
 + (BOOL) saveImage:(NSImage *)image toPath: (NSString*)path{
 
-    NSString *ext = [path pathExtension];
+    NSString *ext = path.pathExtension;
     NSData *photoData = [ImageSnap dataFrom:image asType:ext];
 
     // If path is a dash, that means write to standard out
     if( path == nil || [@"-" isEqualToString:path] ){
-        NSUInteger length = [photoData length];
+        NSUInteger length = photoData.length;
         NSUInteger i;
-        char *start = (char *)[photoData bytes];
+        char *start = (char *)photoData.bytes;
         for( i = 0; i < length; ++i ){
             putc( start[i], stdout );
         }   // end for: write out
@@ -107,7 +107,7 @@
  */
 +(NSData *)dataFrom:(NSImage *)image asType:(NSString *)format{
 
-    NSData *tiffData = [image TIFFRepresentation];
+    NSData *tiffData = image.TIFFRepresentation;
 
     NSBitmapImageFileType imageType = NSJPEGFileType;
     NSDictionary *imageProps = nil;
@@ -123,7 +123,7 @@
     else if( [@"jpg"  rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ||
             [@"jpeg" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ){
         imageType = NSJPEGFileType;
-        imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.9] forKey:NSImageCompressionFactor];
+        imageProps = @{NSImageCompressionFactor: @0.9f};
 
     }
 
@@ -170,7 +170,7 @@
                 withTimelapse:(NSNumber *)timelapse{
     ImageSnap *snap;
     NSImage *image = nil;
-    double interval = timelapse == nil ? -1 : [timelapse doubleValue];
+    double interval = timelapse == nil ? -1 : timelapse.doubleValue;
 
     snap = [[ImageSnap alloc] init];            // Instance of this ImageSnap class
     verbose("Starting device...");
@@ -181,10 +181,10 @@
             // Skip warmup
             verbose("Skipping warmup period.\n");
         } else {
-            double delay = [warmup doubleValue];
+            double delay = warmup.doubleValue;
             verbose("Delaying %.2lf seconds for warmup...",delay);
             NSDate *now = [[NSDate alloc] init];
-            [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval: [warmup doubleValue]]];
+            [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval: warmup.doubleValue]];
             [now release];
             verbose("Warmup complete.\n");
         }
@@ -194,7 +194,7 @@
             verbose("Time lapse: snapping every %.2lf seconds to current directory.\n", interval);
 
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss.SSS"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd_HH-mm-ss.SSS";
 
             // wait a bit to make sure the camera is initialized
             //[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]];
@@ -208,7 +208,7 @@
                 verbose(" (%s)\n", [nowstr UTF8String]);
 
                 // create filename
-                NSString *filename = [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", seq, [nowstr UTF8String]];
+                NSString *filename = [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", seq, nowstr.UTF8String];
 
                 // capture and write
                 image = [snap snapshot];                // Capture a frame
@@ -269,7 +269,7 @@
 
     // Convert frame to an NSImage
     NSCIImageRep *imageRep = [NSCIImageRep imageRepWithCIImage:[CIImage imageWithCVImageBuffer:frame]];
-    NSImage *image = [[[NSImage alloc] initWithSize:[imageRep size]] autorelease];
+    NSImage *image = [[[NSImage alloc] initWithSize:imageRep.size] autorelease];
     [image addRepresentation:imageRep];
     verbose( "Snapshot taken.\n" );
 
@@ -511,7 +511,7 @@ int processArguments(int argc, const char * argv[] ){
                         // Specify device
                     case 'd':
                         if( i+1 < argc ){
-                            device = [ImageSnap deviceNamed:[NSString stringWithUTF8String:argv[i+1]]];
+                            device = [ImageSnap deviceNamed:@(argv[i+1])];
                             if( device == nil ){
                                 error( "Device \"%s\" not found.\n", argv[i+1] );
                                 return 11;
@@ -526,7 +526,7 @@ int processArguments(int argc, const char * argv[] ){
                         // Specify a warmup period before picture snaps
                     case 'w':
                         if( i+1 < argc ){
-                            warmup = [NSNumber numberWithFloat:[[NSString stringWithUTF8String:argv[i+1]] floatValue]];
+                            warmup = @(@(argv[i+1]).floatValue);
                             ++i; // Account for "follow on" argument
                         } else {
                             error( "Not enough arguments given with 'w' flag.\n" );
@@ -537,7 +537,7 @@ int processArguments(int argc, const char * argv[] ){
                         // Timelapse
                     case 't':
                         if( i+1 < argc ){
-                            timelapse = [NSNumber numberWithDouble:[[NSString stringWithUTF8String:argv[i+1]] doubleValue]];
+                            timelapse = @(@(argv[i+1]).doubleValue);
                             //g_timelapse = [timelapse doubleValue];
                             ++i; // Account for "follow on" argument
                         } else {
@@ -554,7 +554,7 @@ int processArguments(int argc, const char * argv[] ){
 
         // Else assume it's a filename
         else {
-            filename = [NSString stringWithUTF8String:argv[i]];
+            filename = @(argv[i]);
         }
 
     }	// end for: each command line argument
@@ -600,7 +600,7 @@ int processArguments(int argc, const char * argv[] ){
 
 void printUsage(int argc, const char * argv[]){
     printf( "USAGE: %s [options] [filename]\n", argv[0] );
-    printf( "Version: %s\n", [VERSION UTF8String] );
+    printf( "Version: %s\n", VERSION.UTF8String );
     printf( "Captures an image from a video device and saves it in a file.\n" );
     printf( "If no device is specified, the system default will be used.\n" );
     printf( "If no filename is specfied, snapshot.jpg will be used.\n" );
@@ -624,14 +624,12 @@ void printUsage(int argc, const char * argv[]){
 int listDevices(){
     NSArray *devices = [ImageSnap videoDevices];
 
-    [devices count] > 0
-    ? printf("Video Devices:\n")
-    : printf("No video devices found.\n");
+    printf(devices.count > 0 ? "Video Devices:\n" : "No video devices found.\n");
 
     for( QTCaptureDevice *device in devices ){
-        printf( "%s\n", [[device description] UTF8String] );
+        printf( "%s\n", device.description.UTF8String );
     }	// end for: each device
-    return [devices count];
+    return devices.count;
 }
 
 /**
