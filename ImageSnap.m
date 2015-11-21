@@ -208,7 +208,7 @@
                 verbose(" (%s)\n", [nowstr UTF8String]);
 
                 // create filename
-                NSString *filename = [NSString stringWithFormat:@"snapshot-%05d-%s.jpg", seq, [nowstr UTF8String]];
+                NSString *filename = [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", seq, [nowstr UTF8String]];
 
                 // capture and write
                 image = [snap snapshot];                // Capture a frame
