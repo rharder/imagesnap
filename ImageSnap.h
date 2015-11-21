@@ -12,14 +12,14 @@
 #define console(...) (!g_quiet && printf(__VA_ARGS__))
 #define verbose(...) (g_verbose && !g_quiet && fprintf(stderr, __VA_ARGS__))
 
-BOOL g_verbose = NO;
-BOOL g_quiet = NO;
-//double g_timelapse = -1;
-NSString *VERSION = @"0.2.5";
+static BOOL g_verbose;
+static BOOL g_quiet;
+
+FOUNDATION_EXPORT NSString *const VERSION;
 
 
 @interface ImageSnap : NSObject {
-    
+
     QTCaptureSession                    *mCaptureSession;
     QTCaptureDeviceInput                *mCaptureDeviceInput;
     QTCaptureDecompressedVideoOutput    *mCaptureDecompressedVideoOutput;
