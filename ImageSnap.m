@@ -34,12 +34,8 @@
 
 - (void)dealloc{
 
-    if( mCaptureSession )					[mCaptureSession release];
-    if( mCaptureDeviceInput )				[mCaptureDeviceInput release];
-    if( mCaptureDecompressedVideoOutput )	[mCaptureDecompressedVideoOutput release];
     CVBufferRelease(mCurrentImageBuffer);
 
-    [super dealloc];
 }
 
 
@@ -185,7 +181,6 @@
             verbose("Delaying %.2lf seconds for warmup...",delay);
             NSDate *now = [[NSDate alloc] init];
             [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval: warmup.doubleValue]];
-            [now release];
             verbose("Warmup complete.\n");
         }
 
@@ -222,7 +217,6 @@
                 // sleep
                 [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval: interval]];
 
-                [now release];
             }
 
         } else {
@@ -234,7 +228,6 @@
         //NSLog(@"Stopped.");
     }   // end if: able to start session
 
-    [snap release];
 
     if ( interval > 0 ){
         return YES;
@@ -269,7 +262,7 @@
 
     // Convert frame to an NSImage
     NSCIImageRep *imageRep = [NSCIImageRep imageRepWithCIImage:[CIImage imageWithCVImageBuffer:frame]];
-    NSImage *image = [[[NSImage alloc] initWithSize:imageRep.size] autorelease];
+    NSImage *image = [[NSImage alloc] initWithSize:imageRep.size];
     [image addRepresentation:imageRep];
     verbose( "Snapshot taken.\n" );
 
@@ -298,9 +291,6 @@
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow: 0.1]];
         }else {
             verbose( "\tShutting down 'stopSession(..)'" );
-            if( mCaptureSession )					[mCaptureSession release];
-            if( mCaptureDeviceInput )				[mCaptureDeviceInput release];
-            if( mCaptureDecompressedVideoOutput )	[mCaptureDecompressedVideoOutput release];
 
             mCaptureSession = nil;
             mCaptureDeviceInput = nil;
@@ -344,7 +334,6 @@
     verbose( "Done.\n");
     if( ![device open:&error] ){
         error( "\tCould not create capture session.\n" );
-        [mCaptureSession release];
         mCaptureSession = nil;
         return NO;
     }
@@ -356,8 +345,6 @@
     verbose( "Done.\n");
     if (![mCaptureSession addInput:mCaptureDeviceInput error:&error]) {
         error( "\tCould not convert device to input device.\n");
-        [mCaptureSession release];
-        [mCaptureDeviceInput release];
         mCaptureSession = nil;
         mCaptureDeviceInput = nil;
         return NO;
@@ -371,9 +358,6 @@
     verbose( "Done.\n" );
     if (![mCaptureSession addOutput:mCaptureDecompressedVideoOutput error:&error]) {
         error( "\tCould not create decompressed output.\n");
-        [mCaptureSession release];
-        [mCaptureDeviceInput release];
-        [mCaptureDecompressedVideoOutput release];
         mCaptureSession = nil;
         mCaptureDeviceInput = nil;
         mCaptureDecompressedVideoOutput = nil;
@@ -445,15 +429,14 @@ QTCaptureDevice *getDefaultDevice();
 int main (int argc, const char * argv[]) {
     NSApplicationLoad();    // May be necessary for 10.5 not to crash.
 
-    NSAutoreleasePool *pool;
-    pool = [[NSAutoreleasePool alloc] init];
-    [NSApplication sharedApplication];
+    @autoreleasepool {
+        [NSApplication sharedApplication];
 
-    int result = processArguments(argc, argv);
+        int result = processArguments(argc, argv);
 
-    //	[pool release];
-    [pool drain];
-    return result;
+        //	[pool release];
+        return result;
+    }
 }
 
 
