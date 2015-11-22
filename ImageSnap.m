@@ -43,9 +43,9 @@ NSString *const VERSION = @"0.2.5";
 
 // Returns the default video device or nil if none found.
 + (QTCaptureDevice *)defaultVideoDevice {
-    QTCaptureDevice *device = nil;
 
-    device = [QTCaptureDevice defaultInputDeviceWithMediaType:QTMediaTypeVideo];
+    QTCaptureDevice *device = [QTCaptureDevice defaultInputDeviceWithMediaType:QTMediaTypeVideo];
+
     if (device == nil) {
         device = [QTCaptureDevice defaultInputDeviceWithMediaType:QTMediaTypeMuxed];
     }
@@ -55,7 +55,7 @@ NSString *const VERSION = @"0.2.5";
 
 // Returns the named capture device or nil if not found.
 + (QTCaptureDevice *)deviceNamed:(NSString *)name {
-    QTCaptureDevice *result = nil;
+    QTCaptureDevice *result;
 
     NSArray *devices = [ImageSnap videoDevices];
     for (QTCaptureDevice *device in devices) {
@@ -145,7 +145,7 @@ NSString *const VERSION = @"0.2.5";
                     withWarmup:(NSNumber *)warmup
                  withTimelapse:(NSNumber *)timelapse {
     ImageSnap *snap;
-    NSImage *image = nil;
+    NSImage *image;
     double interval = timelapse == nil ? -1 : timelapse.doubleValue;
 
     snap = [[ImageSnap alloc] init];            // Instance of this ImageSnap class
@@ -275,7 +275,7 @@ NSString *const VERSION = @"0.2.5";
         return NO;
     }
 
-    NSError *error = nil;
+    NSError *error;
 
     // If we've already started with this device, return
     if ([device isEqual:[self.mCaptureDeviceInput device]] &&

@@ -25,10 +25,10 @@ int main(int argc, const char * argv[]) {
  */
 int processArguments(int argc, const char * argv[]) {
 
-    NSString *filename = nil;
-    QTCaptureDevice *device = nil;
-    NSNumber *warmup = nil;
-    NSNumber *timelapse = nil;
+    NSString *filename;
+    QTCaptureDevice *device;
+    NSNumber *warmup;
+    NSNumber *timelapse;
 
     for (int i = 1; i < argc; ++i) {
 
