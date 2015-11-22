@@ -182,8 +182,7 @@ int listDevices() {
  * because the user didn't specify a filename.
  */
 NSString *generateFilename() {
-    NSString *result = @"snapshot.jpg";
-    return result;
+    return @"snapshot.jpg";
 }
 
 /**

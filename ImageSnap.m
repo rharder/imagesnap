@@ -32,7 +32,13 @@ NSString *const VERSION = @"0.2.5";
     CVBufferRelease(self.currentImageBuffer);
 }
 
-// Returns an array of video devices attached to this computer.
+/**
+ * Returns all attached QTCaptureDevice objects that have video.
+ * This includes video-only devices (QTMediaTypeVideo) and
+ * audio/video devices (QTMediaTypeMuxed).
+ *
+ * @return array of video devices
+ */
 + (NSArray *)videoDevices {
     NSMutableArray *results = [NSMutableArray arrayWithCapacity:3];
     [results addObjectsFromArray:[QTCaptureDevice inputDevicesWithMediaType:QTMediaTypeVideo]];
@@ -67,7 +73,11 @@ NSString *const VERSION = @"0.2.5";
     return result;
 }
 
-// Saves an image to a file or standard out if path is nil or "-" (hyphen).
+/**
+ * Writes an NSImage to disk, formatting it according
+ * to the file extension. If path is "-" (a dash), then
+ * an jpeg representation is written to standard out.
+ */
 + (BOOL)saveImage:(NSImage *)image toPath:(NSString *)path {
 
     NSString *ext = path.pathExtension;
@@ -92,7 +102,9 @@ NSString *const VERSION = @"0.2.5";
 }
 
 /**
- * Converts an NSImage into NSData.
+ * Converts an NSImage to raw NSData according to a given
+ * format. A simple string search is performed for such
+ * characters as jpeg, tiff, png, and so forth.
  */
 + (NSData *)dataFrom:(NSImage *)image asType:(NSString *)format {
 
