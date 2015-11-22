@@ -17,7 +17,6 @@ static BOOL g_quiet;
 
 FOUNDATION_EXPORT NSString *const VERSION;
 
-
 @interface ImageSnap : NSObject {
 
     QTCaptureSession                    *mCaptureSession;
@@ -34,33 +33,33 @@ FOUNDATION_EXPORT NSString *const VERSION;
  *
  * @return autoreleased array of video devices
  */
-+(NSArray *)videoDevices;
++ (NSArray *)videoDevices;
 
 /**
  * Returns the default QTCaptureDevice object for video
  * or nil if none is found.
  */
-+(QTCaptureDevice *)defaultVideoDevice;
++ (QTCaptureDevice *)defaultVideoDevice;
 
 /**
  * Returns the QTCaptureDevice with the given name
  * or nil if the device cannot be found.
  */
-+(QTCaptureDevice *)deviceNamed:(NSString *)name;
++ (QTCaptureDevice *)deviceNamed:(NSString *)name;
 
 /**
  * Writes an NSImage to disk, formatting it according
  * to the file extension. If path is "-" (a dash), then
  * an jpeg representation is written to standard out.
  */
-+ (BOOL) saveImage:(NSImage *)image toPath: (NSString*)path;
++ (BOOL)saveImage:(NSImage *)image toPath:(NSString *)path;
 
 /**
  * Converts an NSImage to raw NSData according to a given
  * format. A simple string search is performed for such
  * characters as jpeg, tiff, png, and so forth.
  */
-+(NSData *)dataFrom:(NSImage *)image asType:(NSString *)format;
++ (NSData *)dataFrom:(NSImage *)image asType:(NSString *)format;
 
 
 
@@ -69,17 +68,16 @@ FOUNDATION_EXPORT NSString *const VERSION;
  * Activates the video source, saves a frame, stops the source,
  * and saves the file.
  */
-+(BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path;
-+(BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup;
-+(BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup withTimelapse:(NSNumber *)timelapse;
++ (BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path;
++ (BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup;
++ (BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup withTimelapse:(NSNumber *)timelapse;
 
--(id)init;
--(void)dealloc;
+- (id)init;
+- (void)dealloc;
 
 
--(BOOL)startSession:(QTCaptureDevice *)device;
--(NSImage *)snapshot;
--(void)stopSession;
-
+- (BOOL)startSession:(QTCaptureDevice *)device;
+- (NSImage *)snapshot;
+- (void)stopSession;
 
 @end
