@@ -17,14 +17,7 @@ static BOOL g_quiet;
 
 FOUNDATION_EXPORT NSString *const VERSION;
 
-@interface ImageSnap : NSObject {
-
-    QTCaptureSession                    *mCaptureSession;
-    QTCaptureDeviceInput                *mCaptureDeviceInput;
-    QTCaptureDecompressedVideoOutput    *mCaptureDecompressedVideoOutput;
-    CVImageBufferRef                    mCurrentImageBuffer;
-}
-
+@interface ImageSnap : NSObject
 
 /**
  * Returns all attached QTCaptureDevice objects that have video.
@@ -60,8 +53,6 @@ FOUNDATION_EXPORT NSString *const VERSION;
  * characters as jpeg, tiff, png, and so forth.
  */
 + (NSData *)dataFrom:(NSImage *)image asType:(NSString *)format;
-
-
 
 /**
  * Primary one-stop-shopping message for capturing an image.
