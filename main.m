@@ -75,7 +75,7 @@ int processArguments(int argc, const char * argv[]) {
                             if (device == nil) {
                                 error("Device \"%s\" not found.\n", argv[i+1]);
                                 return 11;
-                            }   // end if: not found
+                            }
                             ++i; // Account for "follow on" argument
                         } else {
                             error("Not enough arguments given with 'd' flag.\n");
@@ -98,27 +98,26 @@ int processArguments(int argc, const char * argv[]) {
                     case 't':
                         if (i+1 < argc) {
                             timelapse = @(@(argv[i+1]).doubleValue);
-                            //g_timelapse = [timelapse doubleValue];
                             ++i; // Account for "follow on" argument
                         } else {
                             error("Not enough arguments given with 't' flag.\n");
                             return (int)'t';
                         }
                         break;
-                }	// end switch: flag value
-            }   // end else: not dash only
+                }
+            }
         } else {
             // assume it's a filename
             filename = @(argv[i]);
         }
 
-    }	// end for: each command line argument
+    }
 
     // Make sure we have a filename
     if (filename == nil) {
         filename = generateFilename();
         verbose("No filename specified. Using %s\n", [filename UTF8String]);
-    }	// end if: no filename given
+    }
 
     if (filename == nil) {
         error("No suitable filename could be determined.\n");
@@ -129,7 +128,7 @@ int processArguments(int argc, const char * argv[]) {
     if (device == nil) {
         device = getDefaultDevice();
         verbose("No device specified. Using %s\n", [[device description] UTF8String]);
-    }	// end if: no device given
+    }
 
     if (device == nil) {
         error("No video devices found.\n");
@@ -143,7 +142,7 @@ int processArguments(int argc, const char * argv[]) {
         console("%s\n", [filename UTF8String]);
     } else {
         error("Error.\n");
-    }   // end else
+    }
 
     return 0;
 }
@@ -174,25 +173,23 @@ int listDevices() {
 
     for (QTCaptureDevice *device in devices) {
         printf("%s\n", device.description.UTF8String);
-    }	// end for: each device
+    }
     return devices.count;
 }
 
 /**
  * Generates a filename for saving the image, presumably
  * because the user didn't specify a filename.
- * Currently returns snapshot.tiff.
  */
 NSString *generateFilename() {
     NSString *result = @"snapshot.jpg";
     return result;
-}	// end
+}
 
 /**
  * Gets a default video device, or nil if none is found.
- * For now, simply queries ImageSnap. May be fancier
- * in the future.
+ * For now, simply queries ImageSnap.
  */
 QTCaptureDevice *getDefaultDevice() {
     return [ImageSnap defaultVideoDevice];
-}	// end
+}

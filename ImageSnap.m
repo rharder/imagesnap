@@ -61,11 +61,11 @@ NSString *const VERSION = @"0.2.5";
     for (QTCaptureDevice *device in devices) {
         if ([name isEqualToString:device.description]) {
             result = device;
-        }   // end if: match
-    }   // end for: each device
+        }
+    }
 
     return result;
-}   // end
+}
 
 // Saves an image to a file or standard out if path is nil or "-" (hyphen).
 + (BOOL)saveImage:(NSImage *)image toPath:(NSString *)path {
@@ -80,7 +80,7 @@ NSString *const VERSION = @"0.2.5";
         char *start = (char *)photoData.bytes;
         for (i = 0; i < length; ++i) {
             putc(start[i], stdout );
-        }   // end for: write out
+        }
 
         return YES;
     } else {
@@ -92,15 +92,14 @@ NSString *const VERSION = @"0.2.5";
 }
 
 /**
- * Converts an NSImage into NSData. Defaults to jpeg if
- * format cannot be determined.
+ * Converts an NSImage into NSData.
  */
 + (NSData *)dataFrom:(NSImage *)image asType:(NSString *)format {
 
     NSData *tiffData = image.TIFFRepresentation;
 
     NSBitmapImageFileType imageType = NSJPEGFileType;
-    NSDictionary *imageProps = nil;
+    NSDictionary *imageProps;
 
     if ([@"tif" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound ||
        [@"tiff" rangeOfString:format options:NSCaseInsensitiveSearch].location != NSNotFound) {
@@ -126,7 +125,7 @@ NSString *const VERSION = @"0.2.5";
     NSData *photoData = [imageRep representationUsingType:imageType properties:imageProps];
 
     return photoData;
-}   // end dataFrom
+}
 
 /**
  * Primary one-stop-shopping message for capturing an image.
@@ -171,9 +170,6 @@ NSString *const VERSION = @"0.2.5";
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             dateFormatter.dateFormat = @"yyyy-MM-dd_HH-mm-ss.SSS";
 
-            // wait a bit to make sure the camera is initialized
-            //[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]];
-
             for (unsigned long seq = 0; ; seq++) {
                 NSDate *now = [[NSDate alloc] init];
                 NSString *nowstr = [dateFormatter stringFromDate:now];
@@ -181,7 +177,6 @@ NSString *const VERSION = @"0.2.5";
                 verbose(" - Snapshot %5lu", seq);
                 verbose(" (%s)\n", [nowstr UTF8String]);
 
-                // create filename
                 NSString *filename = [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", seq, nowstr.UTF8String];
 
                 // capture and write
@@ -200,18 +195,16 @@ NSString *const VERSION = @"0.2.5";
         } else {
             image = [snap snapshot];                // Capture a frame
         }
-        //NSLog(@"Stopping...");
-        [snap stopSession];                     // Stop session
-        //NSLog(@"Stopped.");
-    }   // end if: able to start session
 
+        [snap stopSession];
+    }
 
     if (interval > 0) {
         return YES;
     } else {
         return image == nil ? NO : [ImageSnap saveImage:image toPath:path];
     }
-}   // end
+}
 
 /**
  * Returns current snapshot or nil if there is a problem
@@ -223,18 +216,16 @@ NSString *const VERSION = @"0.2.5";
     CVImageBufferRef frame = nil;               // Hold frame we find
     while (frame == nil) {                      // While waiting for a frame
 
-        //verbose("\tEntering synchronized block to see if frame is captured yet...");
         @synchronized(self) {                    // Lock since capture is on another thread
             frame = self.mCurrentImageBuffer;        // Hold current frame
             CVBufferRetain(frame);              // Retain it (OK if nil)
-        }   // end sync: self
-        //verbose("Done.\n" );
+        }
 
         if (frame == nil) {                     // Still no frame? Wait a little while.
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-        }   // end if: still nothing, wait
+        }
 
-    }   // end while: no frame yet
+    }
 
     // Convert frame to an NSImage
     NSCIImageRep *imageRep = [NSCIImageRep imageRepWithCIImage:[CIImage imageWithCVImageBuffer:frame]];
@@ -268,8 +259,8 @@ NSString *const VERSION = @"0.2.5";
             self.mCaptureSession = nil;
             self.mCaptureDeviceInput = nil;
             self.mCaptureDecompressedVideoOutput = nil;
-        }   // end if: stopped
-    }   // end while: not stopped
+        }
+    }
 }
 
 /**
@@ -294,7 +285,7 @@ NSString *const VERSION = @"0.2.5";
     } else if (self.mCaptureSession != nil) {
         verbose("\tStopping previous session.\n" );
         [self stopSession];
-    }   // end if: else stop session
+    }
 
     // Create the capture session
     verbose("\tCreating QTCaptureSession..." );
@@ -306,7 +297,6 @@ NSString *const VERSION = @"0.2.5";
         return NO;
     }
 
-
     // Create input object from the device
     verbose("\tCreating QTCaptureDeviceInput with %s...", [[device description] UTF8String] );
     self.mCaptureDeviceInput = [[QTCaptureDeviceInput alloc] initWithDevice:device];
@@ -317,7 +307,6 @@ NSString *const VERSION = @"0.2.5";
         self.mCaptureDeviceInput = nil;
         return NO;
     }
-
 
     // Decompressed video output
     verbose("\tCreating QTCaptureDecompressedVideoOutput...");
@@ -347,7 +336,7 @@ NSString *const VERSION = @"0.2.5";
     verbose("Session started.\n");
 
     return YES;
-}   // end startSession
+}
 
 // This delegate method is called whenever the QTCaptureDecompressedVideoOutput receives a frame
 - (void)captureOutput:(QTCaptureOutput *)captureOutput
