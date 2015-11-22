@@ -63,7 +63,6 @@ FOUNDATION_EXPORT NSString *const VERSION;
 + (BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup;
 + (BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup withTimelapse:(NSNumber *)timelapse;
 
-- (id)init;
 - (void)dealloc;
 
 
