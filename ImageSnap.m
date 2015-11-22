@@ -19,17 +19,17 @@ NSString *const VERSION = @"0.2.5";
      withSampleBuffer:(QTSampleBuffer *)sampleBuffer
        fromConnection:(QTCaptureConnection *)connection;
 
-@property (nonatomic, strong) QTCaptureSession *mCaptureSession;
-@property (nonatomic, strong) QTCaptureDeviceInput *mCaptureDeviceInput;
-@property (nonatomic, strong) QTCaptureDecompressedVideoOutput *mCaptureDecompressedVideoOutput;
-@property (nonatomic, assign) CVImageBufferRef mCurrentImageBuffer;
+@property (nonatomic, strong) QTCaptureSession *captureSession;
+@property (nonatomic, strong) QTCaptureDeviceInput *captureDeviceInput;
+@property (nonatomic, strong) QTCaptureDecompressedVideoOutput *captureDecompressedVideoOutput;
+@property (nonatomic, assign) CVImageBufferRef currentImageBuffer;
 
 @end
 
 @implementation ImageSnap
 
 - (void)dealloc {
-    CVBufferRelease(self.mCurrentImageBuffer);
+    CVBufferRelease(self.currentImageBuffer);
 }
 
 // Returns an array of video devices attached to this computer.
@@ -217,7 +217,7 @@ NSString *const VERSION = @"0.2.5";
     while (frame == nil) {                      // While waiting for a frame
 
         @synchronized(self) {                    // Lock since capture is on another thread
-            frame = self.mCurrentImageBuffer;        // Hold current frame
+            frame = self.currentImageBuffer;        // Hold current frame
             CVBufferRetain(frame);              // Retain it (OK if nil)
         }
 
@@ -243,22 +243,22 @@ NSString *const VERSION = @"0.2.5";
     verbose("Stopping session...\n" );
 
     // Make sure we've stopped
-    while (self.mCaptureSession != nil) {
+    while (self.captureSession != nil) {
         verbose("\tCaptureSession != nil\n");
 
         verbose("\tStopping CaptureSession...");
-        [self.mCaptureSession stopRunning];
+        [self.captureSession stopRunning];
         verbose("Done.\n");
 
-        if ([self.mCaptureSession isRunning]) {
-            verbose("[mCaptureSession isRunning]");
+        if ([self.captureSession isRunning]) {
+            verbose("[captureSession isRunning]");
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         } else {
             verbose("\tShutting down 'stopSession(..)'" );
 
-            self.mCaptureSession = nil;
-            self.mCaptureDeviceInput = nil;
-            self.mCaptureDecompressedVideoOutput = nil;
+            self.captureSession = nil;
+            self.captureDeviceInput = nil;
+            self.captureDecompressedVideoOutput = nil;
         }
     }
 }
@@ -278,46 +278,46 @@ NSString *const VERSION = @"0.2.5";
     NSError *error;
 
     // If we've already started with this device, return
-    if ([device isEqual:[self.mCaptureDeviceInput device]] &&
-       self.mCaptureSession != nil &&
-       [self.mCaptureSession isRunning]) {
+    if ([device isEqual:[self.captureDeviceInput device]] &&
+       self.captureSession != nil &&
+       [self.captureSession isRunning]) {
         return YES;
-    } else if (self.mCaptureSession != nil) {
+    } else if (self.captureSession != nil) {
         verbose("\tStopping previous session.\n" );
         [self stopSession];
     }
 
     // Create the capture session
     verbose("\tCreating QTCaptureSession..." );
-    self.mCaptureSession = [[QTCaptureSession alloc] init];
+    self.captureSession = [[QTCaptureSession alloc] init];
     verbose("Done.\n");
     if (![device open:&error] ) {
         error("\tCould not create capture session.\n" );
-        self.mCaptureSession = nil;
+        self.captureSession = nil;
         return NO;
     }
 
     // Create input object from the device
     verbose("\tCreating QTCaptureDeviceInput with %s...", [[device description] UTF8String] );
-    self.mCaptureDeviceInput = [[QTCaptureDeviceInput alloc] initWithDevice:device];
+    self.captureDeviceInput = [[QTCaptureDeviceInput alloc] initWithDevice:device];
     verbose("Done.\n");
-    if (![self.mCaptureSession addInput:self.mCaptureDeviceInput error:&error]) {
+    if (![self.captureSession addInput:self.captureDeviceInput error:&error]) {
         error("\tCould not convert device to input device.\n");
-        self.mCaptureSession = nil;
-        self.mCaptureDeviceInput = nil;
+        self.captureSession = nil;
+        self.captureDeviceInput = nil;
         return NO;
     }
 
     // Decompressed video output
     verbose("\tCreating QTCaptureDecompressedVideoOutput...");
-    self.mCaptureDecompressedVideoOutput = [[QTCaptureDecompressedVideoOutput alloc] init];
-    [self.mCaptureDecompressedVideoOutput setDelegate:self];
+    self.captureDecompressedVideoOutput = [[QTCaptureDecompressedVideoOutput alloc] init];
+    [self.captureDecompressedVideoOutput setDelegate:self];
     verbose("Done.\n" );
-    if (![self.mCaptureSession addOutput:self.mCaptureDecompressedVideoOutput error:&error]) {
+    if (![self.captureSession addOutput:self.captureDecompressedVideoOutput error:&error]) {
         error("\tCould not create decompressed output.\n");
-        self.mCaptureSession = nil;
-        self.mCaptureDeviceInput = nil;
-        self.mCaptureDecompressedVideoOutput = nil;
+        self.captureSession = nil;
+        self.captureDeviceInput = nil;
+        self.captureDecompressedVideoOutput = nil;
 
         return NO;
     }
@@ -325,14 +325,14 @@ NSString *const VERSION = @"0.2.5";
     // Clear old image?
     verbose("\tEntering synchronized block to clear memory...");
     @synchronized(self) {
-        if (self.mCurrentImageBuffer != nil ) {
-            CVBufferRelease(self.mCurrentImageBuffer);
-            self.mCurrentImageBuffer = nil;
+        if (self.currentImageBuffer != nil ) {
+            CVBufferRelease(self.currentImageBuffer);
+            self.currentImageBuffer = nil;
         }   // end if: clear old image
     }   // end sync: self
     verbose("Done.\n");
 
-    [self.mCaptureSession startRunning];
+    [self.captureSession startRunning];
     verbose("Session started.\n");
 
     return YES;
@@ -354,8 +354,8 @@ NSString *const VERSION = @"0.2.5";
     CVBufferRetain(videoFrame);
 
     @synchronized(self) {
-        imageBufferToRelease = self.mCurrentImageBuffer;
-        self.mCurrentImageBuffer = videoFrame;
+        imageBufferToRelease = self.currentImageBuffer;
+        self.currentImageBuffer = videoFrame;
     }   // end sync
     CVBufferRelease(imageBufferToRelease);
 }
