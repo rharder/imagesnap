@@ -5,8 +5,8 @@
 //  Created by Robert Harder on 9/10/09.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import <Cocoa/Cocoa.h>
-#import <QTKit/QTKit.h>
 #include "ImageSnap.h"
 
 #define error(...) fprintf(stderr, __VA_ARGS__)
@@ -33,20 +33,24 @@ FOUNDATION_EXPORT NSString *const VERSION;
  * Returns the default QTCaptureDevice object for video
  * or nil if none is found.
  */
-+ (QTCaptureDevice *)defaultVideoDevice;
++ (AVCaptureDevice *)defaultVideoDevice;
 
 /**
  * Returns the QTCaptureDevice with the given name
  * or nil if the device cannot be found.
  */
-+ (QTCaptureDevice *)deviceNamed:(NSString *)name;
++ (AVCaptureDevice *)deviceNamed:(NSString *)name;
+
+- (void)setUpSessionWithDevice:(AVCaptureDevice *)device;
+
+- (void)getReadyToTakePicture;
 
 /**
  * Primary one-stop-shopping message for capturing an image.
  * Activates the video source, saves a frame, stops the source,
  * and saves the file.
  */
-+ (BOOL)saveSingleSnapshotFrom:(QTCaptureDevice *)device
+- (void)saveSingleSnapshotFrom:(AVCaptureDevice *)device
                         toFile:(NSString *)path
                     withWarmup:(NSNumber *)warmup
                  withTimelapse:(NSNumber *)timelapse;

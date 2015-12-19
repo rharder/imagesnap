@@ -6,7 +6,7 @@ int processArguments(int argc, const char * argv[]);
 void printUsage(int argc, const char * argv[]);
 int listDevices();
 NSString *generateFilename();
-QTCaptureDevice *getDefaultDevice();
+AVCaptureDevice *getDefaultDevice();
 
 int main(int argc, const char * argv[]) {
     NSApplicationLoad();    // May be necessary for 10.5 not to crash.
@@ -26,7 +26,7 @@ int main(int argc, const char * argv[]) {
 int processArguments(int argc, const char * argv[]) {
 
     NSString *filename;
-    QTCaptureDevice *device;
+    AVCaptureDevice *device;
     NSNumber *warmup;
     NSNumber *timelapse;
 
@@ -127,22 +127,21 @@ int processArguments(int argc, const char * argv[]) {
     // Make sure we have a device
     if (device == nil) {
         device = getDefaultDevice();
-        verbose("No device specified. Using %s\n", [[device description] UTF8String]);
+        verbose("No device specified. Using %s\n", [device.description UTF8String]);
     }
 
     if (device == nil) {
         error("No video devices found.\n");
         return 2;
     } else {
-        console("Capturing image from device \"%s\"...", [[device description] UTF8String]);
+        console("Capturing image from device \"%s\"...", [device.description UTF8String]);
     }
 
     // Image capture
-    if ([ImageSnap saveSingleSnapshotFrom:device toFile:filename withWarmup:warmup withTimelapse:timelapse]) {
-        console("%s\n", [filename UTF8String]);
-    } else {
-        error("Error.\n");
-    }
+    ImageSnap *imageSnap = [ImageSnap new];
+    [imageSnap setUpSessionWithDevice:device];
+    [imageSnap getReadyToTakePicture];
+    [imageSnap saveSingleSnapshotFrom:device toFile:filename withWarmup:warmup withTimelapse:timelapse];
 
     return 0;
 }
@@ -153,7 +152,7 @@ void printUsage(int argc, const char * argv[]) {
     printf("Captures an image from a video device and saves it in a file.\n");
     printf("If no device is specified, the system default will be used.\n");
     printf("If no filename is specfied, snapshot.jpg will be used.\n");
-    printf("Supported image types: JPEG, TIFF, PNG, GIF, BMP\n");
+    printf("JPEG is the only supported output type.\n");
     printf("  -h          This help message\n");
     printf("  -v          Verbose mode\n");
     printf("  -l          List available video devices\n");
@@ -171,7 +170,7 @@ int listDevices() {
 
     printf(devices.count > 0 ? "Video Devices:\n" : "No video devices found.\n");
 
-    for (QTCaptureDevice *device in devices) {
+    for (AVCaptureDevice *device in devices) {
         printf("%s\n", device.description.UTF8String);
     }
     return devices.count;
@@ -189,6 +188,6 @@ NSString *generateFilename() {
  * Gets a default video device, or nil if none is found.
  * For now, simply queries ImageSnap.
  */
-QTCaptureDevice *getDefaultDevice() {
+AVCaptureDevice *getDefaultDevice() {
     return [ImageSnap defaultVideoDevice];
 }
