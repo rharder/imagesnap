@@ -23,8 +23,10 @@ NSString *const VERSION = @"0.2.5";
 
 #if OS_OBJECT_HAVE_OBJC_SUPPORT == 1
 @property (nonatomic, strong) dispatch_queue_t imageQueue;
+@property (nonatomic, strong) dispatch_semaphore_t semaphore;
 #else
 @property (nonatomic, assign) dispatch_queue_t imageQueue;
+@property (nonatomic, assign) dispatch_semaphore_t semaphore;
 #endif
 
 @end
@@ -41,6 +43,7 @@ NSString *const VERSION = @"0.2.5";
         _dateFormatter.dateFormat = @"yyyy-MM-dd_HH-mm-ss.SSS";
 
         _imageQueue = dispatch_queue_create("Image Queue", NULL);
+        _semaphore = dispatch_semaphore_create(0);
     }
 
     return self;
@@ -131,7 +134,7 @@ NSString *const VERSION = @"0.2.5";
     } else {
         [self takeSnapshotWithFilename:[self fileNameWithSequenceNumber:0]];                // Capture a frame
     }
-
+    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
     [self stopSession];
 }
 
@@ -194,6 +197,7 @@ NSString *const VERSION = @"0.2.5";
 
          dispatch_async(self.imageQueue, ^{
              [imageData writeToFile:weakFilename atomically:YES];
+             dispatch_semaphore_signal(_semaphore);
          });
      }];
 }
