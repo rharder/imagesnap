@@ -129,7 +129,7 @@ NSString *const VERSION = @"0.2.5";
         }
 
     } else {
-        [self takeSnapshotWithFilename:[self fileNameWithSequenceNumber:0]];                // Capture a frame
+        [self takeSnapshotWithFilename:path];                // Capture a frame
     }
 
     [self stopSession];
