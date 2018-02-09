@@ -130,6 +130,7 @@ NSString *const VERSION = @"0.2.5";
 
     } else {
         [self takeSnapshotWithFilename:[self fileNameWithSequenceNumber:0]];                // Capture a frame
+            [[NSRunLoop currentRunLoop] runUntilDate:[[NSDate date] dateByAddingTimeInterval:1]];
     }
 
     [self stopSession];
