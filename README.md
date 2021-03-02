@@ -59,7 +59,8 @@ Only JPEG output is supported.
 
 ## Changes
 
-  * v0.2.6 - When specifying a device with the `-d` flag, substrings are matched if an exact match is not found.  Some cleanup in the code for modern Xcode versions.  Verified on Mojave and Big Sur
+  * v0.2.7 - When specifying a device with the `-d` flag, substrings are matched if an exact match is not found.  Some cleanup in the code for modern Xcode versions.  Verified on Mojave and Big Sur
+  * v0.2.6 - Unknown point release four years before v0.2.7 - I don't know what it was. 
   * v0.2.5 - Added option to delay the first snapshot for some time. Added a time-lapse feature (thanks, Bas Zoetekouw).
   * v0.2.4 - Found bug that caused crash on Mac OS X 10.5 (but not 10.6).
   * v0.2.4beta - Tracking bug that causes crash on Mac OS X 10.5 (but not 10.6).

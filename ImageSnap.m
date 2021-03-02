@@ -10,7 +10,7 @@
 static BOOL g_verbose = NO;
 static BOOL g_quiet = NO;
 
-NSString *const VERSION = @"0.2.6";
+NSString *const VERSION = @"0.2.7";
 
 @interface ImageSnap()
 
