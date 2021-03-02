@@ -171,7 +171,7 @@ unsigned long listDevices() {
     printf(devices.count > 0 ? "Video Devices:\n" : "No video devices found.\n");
 
     for (AVCaptureDevice *device in devices) {
-        printf("=>%s\n", device.localizedName.UTF8String);
+        printf("=> %s\n", device.localizedName.UTF8String);
     }
     return devices.count;
 }
