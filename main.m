@@ -4,9 +4,9 @@
 
 int processArguments(int argc, const char * argv[]);
 void printUsage(int argc, const char * argv[]);
-int listDevices();
-NSString *generateFilename();
-AVCaptureDevice *getDefaultDevice();
+unsigned long listDevices(void);
+NSString *generateFilename(void);
+AVCaptureDevice *getDefaultDevice(void);
 
 int main(int argc, const char * argv[]) {
     NSApplicationLoad();    // May be necessary for 10.5 not to crash.
@@ -165,13 +165,13 @@ void printUsage(int argc, const char * argv[]) {
 /**
  * Prints a list of video capture devices to standard out.
  */
-int listDevices() {
+unsigned long listDevices() {
     NSArray *devices = [ImageSnap videoDevices];
 
     printf(devices.count > 0 ? "Video Devices:\n" : "No video devices found.\n");
 
     for (AVCaptureDevice *device in devices) {
-        printf("%s\n", device.description.UTF8String);
+        printf("=>%s\n", device.localizedName.UTF8String);
     }
     return devices.count;
 }

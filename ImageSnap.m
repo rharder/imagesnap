@@ -37,15 +37,15 @@ NSString *const VERSION = @"0.2.5";
 
 - (instancetype)init {
     self = [super init];
-
+    
     if (self) {
         _dateFormatter = [NSDateFormatter new];
         _dateFormatter.dateFormat = @"yyyy-MM-dd_HH-mm-ss.SSS";
-
+        
         _imageQueue = dispatch_queue_create("Image Queue", NULL);
         _semaphore = dispatch_semaphore_create(0);
     }
-
+    
     return self;
 }
 
@@ -65,36 +65,46 @@ NSString *const VERSION = @"0.2.5";
  */
 + (NSArray *)videoDevices {
     NSMutableArray *results = [NSMutableArray new];
-
+    
     [results addObjectsFromArray:[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]];
     [results addObjectsFromArray:[AVCaptureDevice devicesWithMediaType:AVMediaTypeMuxed]];
-
+    
     return results;
 }
 
 // Returns the default video device or nil if none found.
 + (AVCaptureDevice *)defaultVideoDevice {
-
+    
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-
+    
     if (device == nil) {
         device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeMuxed];
     }
-
+    
     return device;
 }
 
 // Returns the named capture device or nil if not found.
 + (AVCaptureDevice *)deviceNamed:(NSString *)name {
-    AVCaptureDevice *result;
-
+    AVCaptureDevice *result = nil;
     NSArray *devices = [ImageSnap videoDevices];
+    
+    // First check for exact name match
     for (AVCaptureDevice *device in devices) {
         if ([name isEqualToString:device.localizedName]) {
             result = device;
         }
     }
-
+    
+    // If there is no exact match, then try for a substring match
+    if(result == nil){
+        for (AVCaptureDevice *device in devices) {
+            if ([device.localizedName containsString:name]) {
+                result = device;
+            }
+        }
+    }
+    
     return result;
 }
 
@@ -102,12 +112,12 @@ NSString *const VERSION = @"0.2.5";
                         toFile:(NSString *)path
                     withWarmup:(NSNumber *)warmup
                  withTimelapse:(NSNumber *)timelapse {
-
+    
     double interval = timelapse == nil ? -1 : timelapse.doubleValue;
-
+    
     verbose("Starting device...");
     verbose("Device started.\n");
-
+    
     if (warmup == nil) {
         // Skip warmup
         verbose("Skipping warmup period.\n");
@@ -118,19 +128,19 @@ NSString *const VERSION = @"0.2.5";
         [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval:warmup.doubleValue]];
         verbose("Warmup complete.\n");
     }
-
+    
     if (interval > 0) {
         verbose("Time lapse: snapping every %.2lf seconds to current directory.\n", interval);
-
+        
         for (unsigned long seq = 0; ; seq++) {
-
+            
             // capture and write
             [self takeSnapshotWithFilename:[self fileNameWithSequenceNumber:seq]];                // Capture a frame
-
+            
             // sleep
             [[NSRunLoop currentRunLoop] runUntilDate:[[NSDate date] dateByAddingTimeInterval:interval]];
         }
-
+        
     } else {
         [self takeSnapshotWithFilename:path];                // Capture a frame
     }
@@ -139,28 +149,28 @@ NSString *const VERSION = @"0.2.5";
 }
 
 - (void)setUpSessionWithDevice:(AVCaptureDevice *)device {
-
+    
     NSError *error;
-
+    
     // Create the capture session
     self.captureSession = [AVCaptureSession new];
     if ([self.captureSession canSetSessionPreset:AVCaptureSessionPresetPhoto]) {
         self.captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
     }
-
+    
     // Create input object from the device
     self.captureDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
     if (!error && [self.captureSession canAddInput:self.captureDeviceInput]) {
         [self.captureSession addInput:self.captureDeviceInput];
     }
-
+    
     self.captureStillImageOutput = [AVCaptureStillImageOutput new];
-    self.captureStillImageOutput.outputSettings = @{ AVVideoCodecKey : AVVideoCodecJPEG};
-
+//    self.captureStillImageOutput.outputSettings = @{ AVVideoCodecKey : AVVideoCodecJPEG};  // Deprecated
+    
     if ([self.captureSession canAddOutput:self.captureStillImageOutput]) {
         [self.captureSession addOutput:self.captureStillImageOutput];
     }
-
+    
     for (AVCaptureConnection *connection in self.captureStillImageOutput.connections) {
         for (AVCaptureInputPort *port in [connection inputPorts]) {
             if ([port.mediaType isEqual:AVMediaTypeVideo] ) {
@@ -170,7 +180,7 @@ NSString *const VERSION = @"0.2.5";
         }
         if (self.videoConnection) { break; }
     }
-
+    
     if ([self.captureSession canAddOutput:self.captureStillImageOutput]) {
         [self.captureSession addOutput:self.captureStillImageOutput];
     }
@@ -188,18 +198,18 @@ NSString *const VERSION = @"0.2.5";
  */
 - (void)takeSnapshotWithFilename:(NSString *)filename {
     __weak __typeof__(filename) weakFilename = filename;
-
+    
     [self.captureStillImageOutput captureStillImageAsynchronouslyFromConnection:self.videoConnection
                                                               completionHandler:
      ^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-
-         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-
-         dispatch_async(self.imageQueue, ^{
-             [imageData writeToFile:weakFilename atomically:YES];
-             dispatch_semaphore_signal(_semaphore);
-         });
-     }];
+        
+        NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+        
+        dispatch_async(self.imageQueue, ^{
+            [imageData writeToFile:weakFilename atomically:YES];
+            dispatch_semaphore_signal(self->_semaphore);
+        });
+    }];
 }
 
 /**
@@ -207,21 +217,21 @@ NSString *const VERSION = @"0.2.5";
  */
 - (void)stopSession {
     verbose("Stopping session...\n" );
-
+    
     // Make sure we've stopped
     while (self.captureSession != nil) {
         verbose("\tCaptureSession != nil\n");
-
+        
         verbose("\tStopping CaptureSession...");
         [self.captureSession stopRunning];
         verbose("Done.\n");
-
+        
         if ([self.captureSession isRunning]) {
             verbose("[captureSession isRunning]");
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         } else {
             verbose("\tShutting down 'stopSession(..)'" );
-
+            
             self.captureSession = nil;
             self.captureDeviceInput = nil;
             self.captureStillImageOutput = nil;
@@ -230,10 +240,10 @@ NSString *const VERSION = @"0.2.5";
 }
 
 - (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber {
-
+    
     NSDate *now = [NSDate date];
     NSString *nowstr = [self.dateFormatter stringFromDate:now];
-
+    
     return [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", sequenceNumber, nowstr.UTF8String];
 }
 
