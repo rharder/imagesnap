@@ -4,10 +4,6 @@ by: Robert Harder
 
 rob@iHarder.net
 
-## Example
-
-http://www.dayofthenewdan.com/projects/tlassemble
-
 ## Capture Images from the Command Line
 
 http://iharder.net/imagesnap
@@ -19,6 +15,9 @@ images from an iSight or other video source.
 
 Copy the imagesnap file to someplace on your path like `/usr/local/bin`, or
 leave it in a "current directory," and call it with `./imagesnap` instead.
+
+The first time you use the tool, you may get a popup window from MacOS 
+asking to give `imagesnap` permission to access the camera.
 
 Enjoy!
 
@@ -43,8 +42,8 @@ If you have multiple video devices attached to your computer, use the `-l`
 ```
 $ imagesnap -l
 Video Devices:
-iSight
-DV
+=> iSight
+=> DV
 ```
 
 To select a specific video device use the -d device flag:
@@ -54,35 +53,13 @@ $ imagesnap -d DV
 Capturing image from device "DV"..................snapshot.jpg
 ```
 
-To output a jpeg representation to standard out (stdout), use a dash for the
-filename:
-
-```
-$ ssh johndoe@somewhere.com /usr/local/bin/imagesnap - > snapshot.jpg
-$ open snapshot.jpg
-```
-
-## Git Hook Usage
-
-Add this to your git hooks in `.git/hooks/post-commit` and you'll be all set.
-
-```rb
-#!/bin/bash
-FILE="${HOME}/.gitshots/$(date +%s).jpg"
-if [ ! -f "../../rebase-merge" ]; then
-  echo "Taking capture into $FILE!"
-  imagesnap -q -w 3 $FILE &
-fi
-exit 0
-```
-
 ## Image Formats
 
-The following image formats are supported and are determined by the filename
-extension: JPEG, TIFF, PNG, GIF, BMP.
+Only JPEG output is supported. 
 
 ## Changes
 
+  * v0.2.6 - When specifying a device with the `-d` flag, substrings are matched if an exact match is not found.  Some cleanup in the code for modern Xcode versions.  Verified on Mojave and Big Sur
   * v0.2.5 - Added option to delay the first snapshot for some time. Added a time-lapse feature (thanks, Bas Zoetekouw).
   * v0.2.4 - Found bug that caused crash on Mac OS X 10.5 (but not 10.6).
   * v0.2.4beta - Tracking bug that causes crash on Mac OS X 10.5 (but not 10.6).

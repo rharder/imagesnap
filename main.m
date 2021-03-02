@@ -36,6 +36,7 @@ int processArguments(int argc, const char * argv[]) {
         if (argv[i][0] == '-') {
 
             // Dash only? Means write image to stdout
+            // This is no longer supported.
             if (argv[i][1] == 0) {
                 filename = @"-";
                 g_quiet = YES;
