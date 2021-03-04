@@ -10,7 +10,7 @@
 static BOOL g_verbose = NO;
 static BOOL g_quiet = NO;
 
-NSString *const VERSION = @"0.2.7";
+NSString *const VERSION = @"0.2.8";
 
 @interface ImageSnap()
 
@@ -241,10 +241,10 @@ NSString *const VERSION = @"0.2.7";
 
 - (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber {
     
-    NSDate *now = [NSDate date];
-    NSString *nowstr = [self.dateFormatter stringFromDate:now];
-    
-    return [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", sequenceNumber, nowstr.UTF8String];
+//    NSDate *now = [NSDate date];
+//    NSString *nowstr = [self.dateFormatter stringFromDate:now];
+//    return [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", sequenceNumber, nowstr.UTF8String];
+    return [NSString stringWithFormat:@"snapshot-%05lu.jpg", sequenceNumber];
 }
 
 @end
