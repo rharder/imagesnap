@@ -10,7 +10,7 @@
 static BOOL g_verbose = NO;
 static BOOL g_quiet = NO;
 
-NSString *const VERSION = @"0.2.9";
+NSString *const VERSION = @"0.2.10";
 
 @interface ImageSnap()
 
@@ -221,6 +221,7 @@ NSString *const VERSION = @"0.2.9";
             [imageData writeToFile:weakFilename atomically:YES];
             dispatch_semaphore_signal(self->_semaphore);
         });
+        console("%s\n", [filename UTF8String]);
     }];
 }
 

@@ -36,6 +36,7 @@
 		D44480A6105BFF5600756CA8 /* ImageSnap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageSnap.m; sourceTree = "<group>"; };
 		D48D572810598E4000885DA8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		D48D572C10598E4000885DA8 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
+		D49065E025FBEE2F006EF5E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4C1B149105C049B00FCB6A2 /* imagesnap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imagesnap; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -71,6 +72,7 @@
 				D44480A5105BFF5600756CA8 /* ImageSnap.h */,
 				D44480A6105BFF5600756CA8 /* ImageSnap.m */,
 				007BE2EB1C011FD100232768 /* main.m */,
+				D49065E025FBEE2F006EF5E1 /* Info.plist */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -189,14 +191,16 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				DEVELOPMENT_TEAM = R8E25T8CZ5;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = net.iharder;
+				PRODUCT_BUNDLE_IDENTIFIER = net.iharder.imagesnap;
 				PRODUCT_NAME = imagesnap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx;
@@ -209,12 +213,14 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "-";
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = R8E25T8CZ5;
 				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = net.iharder;
+				PRODUCT_BUNDLE_IDENTIFIER = net.iharder.imagesnap;
 				PRODUCT_NAME = imagesnap;
 				SDKROOT = macosx;
 			};

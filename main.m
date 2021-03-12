@@ -135,7 +135,7 @@ int processArguments(int argc, const char * argv[]) {
         error("No video devices found.\n");
         return 2;
     } else {
-        console("Capturing image from device \"%s\"...", [device.description UTF8String]);
+        console("Capturing image from device \"%s\"...", [device.localizedName UTF8String]);
     }
 
     // Image capture
