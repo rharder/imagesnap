@@ -9,16 +9,19 @@
 #import <Cocoa/Cocoa.h>
 #include "ImageSnap.h"
 
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#define console(...) (!g_quiet && printf(__VA_ARGS__))
-#define verbose(...) (g_verbose && !g_quiet && fprintf(stderr, __VA_ARGS__))
+#define error(...) (fprintf(stderr, __VA_ARGS__) && fflush(stderr))
+#define console(...) (!g_quiet && printf(__VA_ARGS__) && fflush(stdout))
+#define verbose(...) (g_verbose && !g_quiet && fprintf(stderr, __VA_ARGS__) && fflush(stderr))
 
-static BOOL g_verbose;
-static BOOL g_quiet;
+static BOOL g_verbose = NO;
+static BOOL g_quiet = NO;
 
 FOUNDATION_EXPORT NSString *const VERSION;
 
 @interface ImageSnap : NSObject
+
++ (void)setVerbose:(BOOL)verbose;
++ (void)setQuiet:(BOOL)quiet;
 
 /**
  * Returns all attached QTCaptureDevice objects that have video.

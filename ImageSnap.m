@@ -7,10 +7,7 @@
 
 #import "ImageSnap.h"
 
-static BOOL g_verbose = NO;
-static BOOL g_quiet = NO;
-
-NSString *const VERSION = @"0.2.10";
+NSString *const VERSION = @"0.2.11";
 
 @interface ImageSnap()
 
@@ -55,6 +52,14 @@ NSString *const VERSION = @"0.2.10";
 }
 
 #pragma mark - Public Interface
+
++(void)setVerbose:(BOOL) verbose{
+    g_verbose = verbose;
+}
+
++(void)setQuiet:(BOOL) quiet{
+    g_quiet = quiet;
+}
 
 /**
  * Returns all attached AVCaptureDevice objects that have video.
@@ -114,7 +119,7 @@ NSString *const VERSION = @"0.2.10";
                  withTimelapse:(NSNumber *)timelapse {
     
     double interval = timelapse == nil ? -1 : timelapse.doubleValue;
-    
+
     verbose("Starting device...");
     verbose("Device started.\n");
     
@@ -151,6 +156,9 @@ NSString *const VERSION = @"0.2.10";
                 [[NSRunLoop currentRunLoop] runUntilDate:[[NSDate date] dateByAddingTimeInterval:interval]];
                 
             }   // end if: file does not already exist
+            else{
+                verbose("Skipping %s\n", [fileNameWithSeq UTF8String]);
+            }
         }   // end for: loop indefinitely
         
     } else {

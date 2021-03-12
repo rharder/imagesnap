@@ -56,10 +56,13 @@ int processArguments(int argc, const char * argv[]) {
                         // Verbose
                     case 'v':
                         g_verbose = YES;
+                        [ImageSnap setVerbose:g_verbose];
+                        verbose("Verbose mode\n");
                         break;
 
                     case 'q':
                         g_quiet = YES;
+                        [ImageSnap setQuiet:g_quiet];
                         break;
 
 
@@ -128,7 +131,7 @@ int processArguments(int argc, const char * argv[]) {
     // Make sure we have a device
     if (device == nil) {
         device = getDefaultDevice();
-        verbose("No device specified. Using %s\n", [device.description UTF8String]);
+        verbose("No device specified. Using %s\n", [device.localizedName UTF8String]);
     }
 
     if (device == nil) {
