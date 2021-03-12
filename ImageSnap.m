@@ -10,7 +10,7 @@
 static BOOL g_verbose = NO;
 static BOOL g_quiet = NO;
 
-NSString *const VERSION = @"0.2.8";
+NSString *const VERSION = @"0.2.9";
 
 @interface ImageSnap()
 
@@ -132,14 +132,26 @@ NSString *const VERSION = @"0.2.8";
     if (interval > 0) {
         verbose("Time lapse: snapping every %.2lf seconds to current directory.\n", interval);
         
-        for (unsigned long seq = 0; ; seq++) {
+        // Loop indefinitely taking pictures.
+        // If the filename exists, skip to the next number.
+        // Mostly the purpose of this is to support interrupted captures.
+        // If you already took 100 pictures and have to restart the program,
+        // this will ensure that you pick up at 101.
+        NSString *fileNameWithSeq;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        for (unsigned long long seq = 0; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
             
-            // capture and write
-            [self takeSnapshotWithFilename:[self fileNameWithSequenceNumber:seq]];                // Capture a frame
-            
-            // sleep
-            [[NSRunLoop currentRunLoop] runUntilDate:[[NSDate date] dateByAddingTimeInterval:interval]];
-        }
+            fileNameWithSeq = [self fileNameWithSequenceNumber:seq];
+            if(![fileManager fileExistsAtPath:fileNameWithSeq]){
+                
+                // capture and write
+                [self takeSnapshotWithFilename:fileNameWithSeq]; // Capture a frame
+                
+                // sleep
+                [[NSRunLoop currentRunLoop] runUntilDate:[[NSDate date] dateByAddingTimeInterval:interval]];
+                
+            }   // end if: file does not already exist
+        }   // end for: loop indefinitely
         
     } else {
         [self takeSnapshotWithFilename:path];                // Capture a frame
@@ -165,7 +177,7 @@ NSString *const VERSION = @"0.2.8";
     }
     
     self.captureStillImageOutput = [AVCaptureStillImageOutput new];
-//    self.captureStillImageOutput.outputSettings = @{ AVVideoCodecKey : AVVideoCodecJPEG};  // Deprecated
+    //    self.captureStillImageOutput.outputSettings = @{ AVVideoCodecKey : AVVideoCodecJPEG};  // Deprecated
     
     if ([self.captureSession canAddOutput:self.captureStillImageOutput]) {
         [self.captureSession addOutput:self.captureStillImageOutput];
@@ -241,9 +253,9 @@ NSString *const VERSION = @"0.2.8";
 
 - (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber {
     
-//    NSDate *now = [NSDate date];
-//    NSString *nowstr = [self.dateFormatter stringFromDate:now];
-//    return [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", sequenceNumber, nowstr.UTF8String];
+    //    NSDate *now = [NSDate date];
+    //    NSString *nowstr = [self.dateFormatter stringFromDate:now];
+    //    return [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", sequenceNumber, nowstr.UTF8String];
     return [NSString stringWithFormat:@"snapshot-%05lu.jpg", sequenceNumber];
 }
 

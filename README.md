@@ -59,6 +59,7 @@ Only JPEG output is supported.
 
 ## Changes
 
+  * v0.2.9 - When doing timelapse, sequence numbers will pick up where the last filename left off.
   * v0.2.8 - Removed timestamp from filename when doing sequence of images with `-t` option
   * v0.2.7 - When specifying a device with the `-d` flag, substrings are matched if an exact match is not found.  Some cleanup in the code for modern Xcode versions.  Verified on Mojave and Big Sur
   * v0.2.6 - Unknown point release four years before v0.2.7 - I don't know what it was. 
