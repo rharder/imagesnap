@@ -27,7 +27,7 @@ To capture an image simply run the program from the command line.
 ```
 $ imagesnap
 Capturing image from device "iSight"..................snapshot.jpg
-````
+```
 
 To specify a filename, make that your last argument:
 
