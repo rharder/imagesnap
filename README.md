@@ -33,14 +33,14 @@ To capture an image simply run the program from the command line.
 
 ```
 $ imagesnap
-Capturing image from device "iSight"..................snapshot.jpg
+Capturing image from device "FaceTime HD Camera (Built-in)"..................snapshot.jpg
 ````
 
 To specify a filename, make that your last argument:
 
 ```
 $ imagesnap icu.jpg
-Capturing image from device "iSight"..................icu.jpg
+Capturing image from device "FaceTime HD Camera (Built-in)"..................icu.jpg
 ```
 
 If you have multiple video devices attached to your computer, use the `-l`
@@ -49,8 +49,10 @@ If you have multiple video devices attached to your computer, use the `-l`
 ```
 $ imagesnap -l
 Video Devices:
-=> iSight
-=> DV
+=> EpocCam
+=> OBS Virtual Camera
+=> Logitech BRIO
+=> FaceTime HD Camera (Built-in)
 => USB 2.0 Camera
 ```
 
@@ -58,9 +60,28 @@ To select a specific video device use the -d device flag with the full
 or partial name of a device:
 
 ```
-$ imagesnap -d Cam
-Capturing image from device "USB 2.0 Camera"..................snapshot.jpg
+$ imagesnap -d BRIO
+Capturing image from device "Logitech BRIO"..................snapshot.jpg
 ```
+
+You can capture a series of images in a timelapse using the `-t` option.  
+The following command would take a picture ever 60 seconds:
+
+```
+$ imagesnap -d BRIO -t 60
+Capturing image from device "Logitech BRIO"..................snapshot-00001.jpg
+snapshot-00002.jpg
+snapshot-00003.jpg
+```
+
+If you get a dark image when you take the picture, you might need to give your camera
+time to warm up with the `-w` option.  Two or three seconds is usually enough:
+
+```
+$ imagesnap -d BRIO -w 3
+Capturing image from device "Logitech BRIO"..................snapshot.jpg
+```
+
 
 ## Image Formats
 
