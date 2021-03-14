@@ -68,6 +68,7 @@ Only JPEG output is supported.
 
 ## Changes
 
+* v0.2.12 - Supports native M1.  Other tweaks for package managers.
 * v0.2.11 - Some documentation updates and preparing for better integration with package managers like Homebrew and MacPorts
 * v0.2.10 - Fixed bug when showing Capturing image with xxx...snapshot.jpg
 * v0.2.9 - When doing timelapse, sequence numbers will pick up where the last filename left off.
