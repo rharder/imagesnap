@@ -204,9 +204,6 @@ NSString *const VERSION = @"0.2.12";
     if ([self.captureSession canAddOutput:self.captureStillImageOutput]) {
         [self.captureSession addOutput:self.captureStillImageOutput];
     }
-}
-
-- (void)getReadyToTakePicture {
     [self.captureSession startRunning];
 }
 

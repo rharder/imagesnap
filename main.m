@@ -144,8 +144,9 @@ int processArguments(int argc, const char * argv[]) {
     // Image capture
     ImageSnap *imageSnap = [ImageSnap new];
     [imageSnap setUpSessionWithDevice:device];
-    [imageSnap getReadyToTakePicture];
-    [imageSnap saveSingleSnapshotFrom:device toFile:filename withWarmup:warmup withTimelapse:timelapse];
+    [imageSnap saveSingleSnapshotFrom:device
+                               toFile:filename withWarmup:warmup
+                        withTimelapse:timelapse];
 
     return 0;
 }

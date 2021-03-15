@@ -46,7 +46,6 @@ FOUNDATION_EXPORT NSString *const VERSION;
 
 - (void)setUpSessionWithDevice:(AVCaptureDevice *)device;
 
-- (void)getReadyToTakePicture;
 
 /**
  * Primary one-stop-shopping message for capturing an image.
