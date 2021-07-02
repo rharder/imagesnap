@@ -15,6 +15,7 @@
 
 static BOOL g_verbose = NO;
 static BOOL g_quiet = NO;
+static uint DEFAULT_WARMUP = 3;
 
 FOUNDATION_EXPORT NSString *const VERSION;
 

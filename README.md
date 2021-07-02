@@ -30,6 +30,7 @@ Enjoy!
 
 ## Usage
 To capture an image simply run the program from the command line.
+There is a delay of a few seconds while the camera warms up, and then...snap!
 
 ```
 $ imagesnap
@@ -74,11 +75,12 @@ snapshot-00002.jpg
 snapshot-00003.jpg
 ```
 
-If you get a dark image when you take the picture, you might need to give your camera
-time to warm up with the `-w` option.  Two or three seconds is usually enough:
+There is a default warmup period of three seconds (new to version 0.2.13) when you take a picture.
+This gives the camera time to get its sensors all set up.  Your camera might have a faster or slower
+response time, so you can adjust the warmup period to suit your needs.
 
 ```
-$ imagesnap -d BRIO -w 3
+$ imagesnap -d BRIO -w 0
 Capturing image from device "Logitech BRIO"..................snapshot.jpg
 ```
 
@@ -89,6 +91,7 @@ Only JPEG output is supported.
 
 ## Changes
 
+* v0.2.13 - Default warmup period is now three seconds.  Set ```-w 0``` if you want no delay.
 * v0.2.12 - Supports native M1.  Other tweaks for package managers.
 * v0.2.11 - Some documentation updates and preparing for better integration with package managers like Homebrew and MacPorts
 * v0.2.10 - Fixed bug when showing Capturing image with xxx...snapshot.jpg
