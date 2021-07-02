@@ -34,8 +34,8 @@ There is a delay of a few seconds while the camera warms up, and then...snap!
 
 ```
 $ imagesnap
-Capturing image from device "FaceTime HD Camera (Built-in)"..................snapshot.jpg
-````
+Capturing image from device "iSight"..................snapshot.jpg
+```
 
 To specify a filename, make that your last argument:
 
