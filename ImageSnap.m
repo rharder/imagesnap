@@ -7,7 +7,7 @@
 
 #import "ImageSnap.h"
 
-NSString *const VERSION = @"0.2.11";
+NSString *const VERSION = @"0.2.13";
 
 @interface ImageSnap()
 
@@ -204,9 +204,6 @@ NSString *const VERSION = @"0.2.11";
     if ([self.captureSession canAddOutput:self.captureStillImageOutput]) {
         [self.captureSession addOutput:self.captureStillImageOutput];
     }
-}
-
-- (void)getReadyToTakePicture {
     [self.captureSession startRunning];
 }
 

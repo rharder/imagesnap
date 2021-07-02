@@ -15,6 +15,7 @@
 
 static BOOL g_verbose = NO;
 static BOOL g_quiet = NO;
+static uint DEFAULT_WARMUP = 3;
 
 FOUNDATION_EXPORT NSString *const VERSION;
 
@@ -46,7 +47,6 @@ FOUNDATION_EXPORT NSString *const VERSION;
 
 - (void)setUpSessionWithDevice:(AVCaptureDevice *)device;
 
-- (void)getReadyToTakePicture;
 
 /**
  * Primary one-stop-shopping message for capturing an image.

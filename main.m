@@ -27,7 +27,7 @@ int processArguments(int argc, const char * argv[]) {
 
     NSString *filename;
     AVCaptureDevice *device;
-    NSNumber *warmup;
+    NSNumber *warmup = [NSNumber numberWithInt:DEFAULT_WARMUP];
     NSNumber *timelapse;
 
     for (int i = 1; i < argc; ++i) {
@@ -144,8 +144,9 @@ int processArguments(int argc, const char * argv[]) {
     // Image capture
     ImageSnap *imageSnap = [ImageSnap new];
     [imageSnap setUpSessionWithDevice:device];
-    [imageSnap getReadyToTakePicture];
-    [imageSnap saveSingleSnapshotFrom:device toFile:filename withWarmup:warmup withTimelapse:timelapse];
+    [imageSnap saveSingleSnapshotFrom:device
+                               toFile:filename withWarmup:warmup
+                        withTimelapse:timelapse];
 
     return 0;
 }
@@ -162,7 +163,7 @@ void printUsage(int argc, const char * argv[]) {
     printf("  -l          List available video devices\n");
     printf("  -t x.xx     Take a picture every x.xx seconds\n");
     printf("  -q          Quiet mode. Do not output any text\n");
-    printf("  -w x.xx     Warmup. Delay snapshot x.xx seconds after turning on camera\n");
+    printf("  -w x.xx     Warmup. Delay snapshot x.xx seconds after turning on camera (default 3sec)\n");
     printf("  -d device   Use named video device\n");
 }
 
