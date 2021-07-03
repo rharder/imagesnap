@@ -91,6 +91,7 @@ Only JPEG output is supported.
 
 ## Changes
 
+* v0.2.14 - Bump to fix distribution problems only
 * v0.2.13 - Default warmup period is now three seconds.  Set ```-w 0``` if you want no delay.
 * v0.2.12 - Supports native M1.  Other tweaks for package managers.
 * v0.2.11 - Some documentation updates and preparing for better integration with package managers like Homebrew and MacPorts
