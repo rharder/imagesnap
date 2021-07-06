@@ -4,7 +4,6 @@ by: Robert Harder
 
 rob@iHarder.net
 
-
 ## Capture Images from the Command Line
 
 http://iharder.net/imagesnap
