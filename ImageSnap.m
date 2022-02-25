@@ -146,7 +146,7 @@ NSString *const VERSION = @"0.2.14";
         NSFileManager *fileManager = [NSFileManager defaultManager];
         for (unsigned long long seq = 0; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
             
-            fileNameWithSeq = [self fileNameWithSequenceNumber:seq];
+            fileNameWithSeq = [self fileNameWithSequenceNumber:seq withPath:path];
             if(![fileManager fileExistsAtPath:fileNameWithSeq]){
                 
                 // capture and write
@@ -257,12 +257,12 @@ NSString *const VERSION = @"0.2.14";
     }
 }
 
-- (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber {
+- (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber withPath:(NSString*)path {
     
     //    NSDate *now = [NSDate date];
     //    NSString *nowstr = [self.dateFormatter stringFromDate:now];
     //    return [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", sequenceNumber, nowstr.UTF8String];
-    return [NSString stringWithFormat:@"snapshot-%05lu.jpg", sequenceNumber];
+    return [NSString stringWithFormat:@"%@snapshot-%05lu.jpg", path, sequenceNumber];
 }
 
 @end
