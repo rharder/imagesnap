@@ -29,6 +29,7 @@ int processArguments(int argc, const char * argv[]) {
     AVCaptureDevice *device;
     NSNumber *warmup = [NSNumber numberWithInt:DEFAULT_WARMUP];
     NSNumber *timelapse;
+    NSNumber *limit;
 
     for (int i = 1; i < argc; ++i) {
 
@@ -108,6 +109,18 @@ int processArguments(int argc, const char * argv[]) {
                             return (int)'t';
                         }
                         break;
+
+                        // Timestamp image limit
+                    case 'n':
+                        if (i+1 < argc) {
+                            limit = @(@(argv[i+1]).doubleValue);
+                            ++i; // Account for "follow on" argument
+                        } else {
+                            error("Not enough arguments given with 'n' flag.\n");
+                            return (int)'n';
+                        }
+                        break;
+
                 }
             }
         } else {
@@ -146,7 +159,8 @@ int processArguments(int argc, const char * argv[]) {
     [imageSnap setUpSessionWithDevice:device];
     [imageSnap saveSingleSnapshotFrom:device
                                toFile:filename withWarmup:warmup
-                        withTimelapse:timelapse];
+                        withTimelapse:timelapse
+                            withLimit:limit];
 
     return 0;
 }
@@ -162,6 +176,7 @@ void printUsage(int argc, const char * argv[]) {
     printf("  -v          Verbose mode\n");
     printf("  -l          List available video devices\n");
     printf("  -t x.xx     Take a picture every x.xx seconds\n");
+    printf("  -n num      Limit to <num> snapshots in -t timelapse mode\n");
     printf("  -q          Quiet mode. Do not output any text\n");
     printf("  -w x.xx     Warmup. Delay snapshot x.xx seconds after turning on camera (default 3sec)\n");
     printf("  -d device   Use named video device\n");

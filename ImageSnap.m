@@ -116,9 +116,11 @@ NSString *const VERSION = @"0.2.14";
 - (void)saveSingleSnapshotFrom:(AVCaptureDevice *)device
                         toFile:(NSString *)path
                     withWarmup:(NSNumber *)warmup
-                 withTimelapse:(NSNumber *)timelapse {
+                 withTimelapse:(NSNumber *)timelapse
+                     withLimit:(NSNumber *)limit {
     
     double interval = timelapse == nil ? -1 : timelapse.doubleValue;
+    double timelapseCount = limit == nil ? ULLONG_MAX : limit.doubleValue;
 
     verbose("Starting device...");
     verbose("Device started.\n");
@@ -146,6 +148,11 @@ NSString *const VERSION = @"0.2.14";
         NSFileManager *fileManager = [NSFileManager defaultManager];
         for (unsigned long long seq = 0; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
             
+            if (seq > timelapseCount) {
+                dispatch_semaphore_signal(self->_semaphore); // hacky, ensures we have a semaphore to wait for below
+                break;
+            }
+
             fileNameWithSeq = [self fileNameWithSequenceNumber:seq];
             if(![fileManager fileExistsAtPath:fileNameWithSeq]){
                 

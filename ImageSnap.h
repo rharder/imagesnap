@@ -56,6 +56,7 @@ FOUNDATION_EXPORT NSString *const VERSION;
 - (void)saveSingleSnapshotFrom:(AVCaptureDevice *)device
                         toFile:(NSString *)path
                     withWarmup:(NSNumber *)warmup
-                 withTimelapse:(NSNumber *)timelapse;
+                 withTimelapse:(NSNumber *)timelapse
+                     withLimit:(NSNumber *)limit;
 
 @end
