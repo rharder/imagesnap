@@ -140,6 +140,11 @@ int processArguments(int argc, const char * argv[]) {
         error("No suitable filename could be determined.\n");
         return 1;
     }
+    
+    if (limit != nil && timelapse == nil) {
+        error("Cannot use -n without -t\n");
+        return 3;
+    }
 
     // Make sure we have a device
     if (device == nil) {
