@@ -146,7 +146,7 @@ NSString *const VERSION = @"0.2.14";
         // this will ensure that you pick up at 101.
         NSString *fileNameWithSeq;
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        for (unsigned long long seq = 0; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
+        for (unsigned long long seq = 1; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
             
             if (seq > timelapseCount) {
                 dispatch_semaphore_signal(self->_semaphore); // hacky, ensures we have a semaphore to wait for below
