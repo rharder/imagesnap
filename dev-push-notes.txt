@@ -27,3 +27,12 @@ https://git-scm.com/docs/git-push
 
 https://github.com/Homebrew/homebrew-core/blob/master/CONTRIBUTING.md
 
+
+
+## MacPorts
+
+The team member who watches imagesnap, and many others, is Ryan Schmidt (ryandesign).
+In an email to me dated 13 March 2021 he said he runs a script periodically that
+refreshes the ports as long as I have tags and releases on github, which the above
+instructions take care of.
+
