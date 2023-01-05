@@ -7,7 +7,7 @@
 
 #import "ImageSnap.h"
 
-NSString *const VERSION = @"0.2.14";
+NSString *const VERSION = @"0.2.15";
 
 @interface ImageSnap()
 
