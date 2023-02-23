@@ -146,6 +146,9 @@ NSString *const VERSION = @"0.2.15";
         // this will ensure that you pick up at 101.
         NSString *fileNameWithSeq;
         NSFileManager *fileManager = [NSFileManager defaultManager];
+        if(path == nil){
+            path = @"./";
+        }
         for (unsigned long long seq = 1; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
             
             if (seq > timelapseCount) {
@@ -153,7 +156,7 @@ NSString *const VERSION = @"0.2.15";
                 break;
             }
 
-            fileNameWithSeq = [self fileNameWithSequenceNumber:seq];
+            fileNameWithSeq = [path stringByAppendingPathComponent:[self fileNameWithSequenceNumber:seq]];
             if(![fileManager fileExistsAtPath:fileNameWithSeq]){
                 
                 // capture and write
@@ -264,7 +267,7 @@ NSString *const VERSION = @"0.2.15";
     }
 }
 
-- (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber {
+- (NSString *)fileNameWithSequenceNumber:(unsigned long)sequenceNumber{
     
     //    NSDate *now = [NSDate date];
     //    NSString *nowstr = [self.dateFormatter stringFromDate:now];

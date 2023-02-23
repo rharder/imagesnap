@@ -132,8 +132,13 @@ int processArguments(int argc, const char * argv[]) {
 
     // Make sure we have a filename
     if (filename == nil) {
-        filename = generateFilename();
-        verbose("No filename specified. Using %s\n", [filename UTF8String]);
+        if( timelapse == nil ){
+            filename = generateFilename();
+            verbose("No filename specified. Using %s\n", [filename UTF8String]);
+        } else {
+            // If doing timelapse and no directory is specified, use current directory
+            filename = @"./";
+        }
     }
 
     if (filename == nil) {
@@ -163,7 +168,8 @@ int processArguments(int argc, const char * argv[]) {
     ImageSnap *imageSnap = [ImageSnap new];
     [imageSnap setUpSessionWithDevice:device];
     [imageSnap saveSingleSnapshotFrom:device
-                               toFile:filename withWarmup:warmup
+                               toFile:filename
+                           withWarmup:warmup
                         withTimelapse:timelapse
                             withLimit:limit];
 
@@ -171,11 +177,12 @@ int processArguments(int argc, const char * argv[]) {
 }
 
 void printUsage(int argc, const char * argv[]) {
-    printf("USAGE: %s [options] [filename]\n", argv[0]);
+    printf("USAGE: %s [options] [filename-or-dir]\n", argv[0]);
     printf("Version: %s\n", VERSION.UTF8String);
     printf("Captures an image from a video device and saves it in a file.\n");
     printf("If no device is specified, the system default will be used.\n");
     printf("If no filename is specfied, snapshot.jpg will be used.\n");
+    printf("If timelapse is used, the filename argument can be a directory where files will be saved.\n");
     printf("JPEG is the only supported output type.\n");
     printf("  -h          This help message\n");
     printf("  -v          Verbose mode\n");
