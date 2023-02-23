@@ -7,7 +7,7 @@
 
 #import "ImageSnap.h"
 
-NSString *const VERSION = @"0.2.15";
+NSString *const VERSION = @"0.2.16";
 
 @interface ImageSnap()
 
@@ -149,6 +149,13 @@ NSString *const VERSION = @"0.2.15";
         if(path == nil){
             path = @"./";
         }
+        path = [path stringByStandardizingPath];
+        [fileManager createDirectoryAtPath:path
+               withIntermediateDirectories:true
+                                attributes:nil
+                                     error:nil];
+        console("Saving images to %s\n", [path UTF8String]);
+        
         for (unsigned long long seq = 1; seq < ULLONG_MAX ; seq++) { // 64 bit counter - a lot of pictures
             
             if (seq > timelapseCount) {
