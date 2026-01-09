@@ -1,72 +1,78 @@
-# Image Snap
+# ImageSnap
 
-by: Robert Harder
-
-rob@iHarder.net
+by: Robert Harder (original), Swift port
 
 ## Capture Images from the Command Line
 
-http://iharder.net/imagesnap
-
-ImageSnap is a Public Domain command-line tool that lets you capture still
-images from an iSight or other video source.
+ImageSnap is a command-line tool that lets you capture still images from an iSight or other video source. This is a Swift rewrite of the original Objective-C version, using modern AVFoundation APIs.
 
 ## Installation
 
-ImageSnap is included in various package managers such as Homebrew and MacPorts.
-The easiest way to install `imagesnap` is probably with one of those commands
-such as `brew install imagesnap`. 
+### Building from Source
 
-You can also simply copy the binary `imagesnap` file to someplace on 
-your path like `/usr/local/bin`, or leave it in a "current directory," and 
-call it with `./imagesnap` instead.  If your download has a version number
-appended to it like `imagesnap-0.2.10` then I recommend you rename it
-to just `imagesnap`.
+**Using Xcode:**
 
-The first time you use the tool, you may get a popup window from MacOS 
-asking to give `imagesnap` permission to access the camera.
+1. Open `ImageSnap.xcodeproj` in Xcode
+2. Select **Product > Build** (⌘B)
+3. The built `imagesnap` executable will be in the DerivedData folder
 
-Enjoy!
+**Using Command Line:**
+
+```bash
+cd ImageSnap
+xcodebuild -scheme imagesnap -configuration Release build
+```
+
+Or compile directly with swiftc:
+
+```bash
+swiftc -o imagesnap main.swift -framework AVFoundation -framework AppKit -framework CoreImage
+```
+
+### Installing
+
+Copy the `imagesnap` binary to someplace on your path like `/usr/local/bin`:
+
+```bash
+cp imagesnap /usr/local/bin/
+```
+
+The first time you use the tool, you may get a popup window from macOS asking to give `imagesnap` permission to access the camera.
 
 ## Usage
-To capture an image simply run the program from the command line.
-There is a delay of a few seconds while the camera warms up, and then...snap!
+
+To capture an image simply run the program from the command line. There is a delay of a few seconds while the camera warms up, and then...snap!
 
 ```
 $ imagesnap
-Capturing image from device "iSight"..................snapshot.jpg
+Capturing image from device "FaceTime HD Camera"..................snapshot.jpg
 ```
 
 To specify a filename, make that your last argument:
 
 ```
 $ imagesnap icu.jpg
-Capturing image from device "FaceTime HD Camera (Built-in)"..................icu.jpg
+Capturing image from device "FaceTime HD Camera"..................icu.jpg
 ```
 
-If you have multiple video devices attached to your computer, use the `-l`
-("el") flag to list them:
+If you have multiple video devices attached to your computer, use the `-l` ("el") flag to list them:
 
 ```
 $ imagesnap -l
 Video Devices:
-=> EpocCam
-=> OBS Virtual Camera
+=> FaceTime HD Camera
 => Logitech BRIO
-=> FaceTime HD Camera (Built-in)
 => USB 2.0 Camera
 ```
 
-To select a specific video device use the -d device flag with the full
-or partial name of a device:
+To select a specific video device use the `-d` flag with the full or partial name of a device:
 
 ```
 $ imagesnap -d BRIO
 Capturing image from device "Logitech BRIO"..................snapshot.jpg
 ```
 
-You can capture a series of images in a timelapse using the `-t` option.  
-The following command would take a picture ever 60 seconds:
+You can capture a series of images in a timelapse using the `-t` option. The following command would take a picture every 60 seconds:
 
 ```
 $ imagesnap -d BRIO -t 60
@@ -75,47 +81,64 @@ snapshot-00002.jpg
 snapshot-00003.jpg
 ```
 
-There is a default warmup period of three seconds (new to version 0.2.13) when you take a picture.
-This gives the camera time to get its sensors all set up.  Your camera might have a faster or slower
-response time, so you can adjust the warmup period to suit your needs.
+Use `-n` to limit the number of timelapse captures:
 
 ```
-$ imagesnap -d BRIO -w 0
-Capturing image from device "Logitech BRIO"..................snapshot.jpg
+$ imagesnap -t 10 -n 5
+Capturing image from device "FaceTime HD Camera"..................snapshot-00001.jpg
+snapshot-00002.jpg
+snapshot-00003.jpg
+snapshot-00004.jpg
+snapshot-00005.jpg
 ```
 
+There is a default warmup period of three seconds when you take a picture. This gives the camera time to get its sensors all set up. Your camera might have a faster or slower response time, so you can adjust the warmup period to suit your needs:
+
+```
+$ imagesnap -w 0
+Capturing image from device "FaceTime HD Camera"...snapshot.jpg
+```
+
+## Command Line Options
+
+```
+USAGE: imagesnap [options] [filename]
+Version: 0.3.0
+Captures an image from a video device and saves it in a file.
+If no device is specified, the system default will be used.
+If no filename is specified, snapshot.jpg will be used.
+Supported image types: JPEG, TIFF, PNG, GIF, BMP
+
+  -h          This help message
+  -v          Verbose mode
+  -l          List available video devices
+  -t x.xx     Take a picture every x.xx seconds
+  -n x        Limit the number of timelapse pictures to x
+  -q          Quiet mode. Do not output any text
+  -w x.xx     Warmup. Delay snapshot x.xx seconds after turning on camera
+  -d device   Use named video device
+```
 
 ## Image Formats
 
-Only JPEG output is supported. 
+The following image formats are supported and are determined by the filename extension:
+
+- JPEG (.jpg, .jpeg) - default
+- PNG (.png)
+- TIFF (.tiff, .tif)
+- GIF (.gif)
+- BMP (.bmp)
 
 ## Changes
 
-* v0.2.16 - Added ability to specify directory where timelapse images will be saved.
-* v0.2.15 - Added `-n` flag to limit the number of timelapse pictures. Also changed first timelapse image numbering to start at one instead of zero.
-* v0.2.14 - Bump to fix distribution problems only
-* v0.2.13 - Default warmup period is now three seconds.  Set ```-w 0``` if you want no delay.
-* v0.2.12 - Supports native M1.  Other tweaks for package managers.
-* v0.2.11 - Some documentation updates and preparing for better integration with package managers like Homebrew and MacPorts
-* v0.2.10 - Fixed bug when showing Capturing image with xxx...snapshot.jpg
-* v0.2.9 - When doing timelapse, sequence numbers will pick up where the last filename left off.
-* v0.2.8 - Removed timestamp from filename when doing sequence of images with `-t` option
-* v0.2.7 - When specifying a device with the `-d` flag, substrings are matched if an exact match is not found.  Some cleanup in the code for modern Xcode versions.  Verified on Mojave and Big Sur
-* v0.2.6 - Unknown point release four years before v0.2.7 - I don't know what it was. 
-* v0.2.5 - Added option to delay the first snapshot for some time. Added a time-lapse feature (thanks, Bas Zoetekouw).
-* v0.2.4 - Found bug that caused crash on Mac OS X 10.5 (but not 10.6).
-* v0.2.4beta - Tracking bug that causes crash on Mac OS X 10.5 (but not 10.6).
-* v0.2.3 - Fixed bug that caused all images to be saved as TIFF. Not sure when this bug was introduced.
-* v0.2.2 - Added ability to output jpeg to standard out. Made executable lowercase imagesnap.
-* v0.2.1 - Changed name from ImageCapture to ImageSnap to avoid confusion with Apple's Image Capture application.
-* v0.2 - Multiple file formats (not just TIFF). Faster response.
-* v0.1 - This is the initial release.
+- v0.3.0 - Complete rewrite in Swift using AVFoundation. Supports macOS 13+.
 
-## A Note About Public Domain
+## Requirements
 
-I have released this software into the Public Domain. That means you can do
-whatever you want with it. Really. You don't have to match it up with any other
-open source license — just use it. You can rename the files, do whatever you
-want. If your lawyers say you have to have a license, contact me, and I'll make
-a special release to you under whatever reasonable license you desire: MIT, BSD,
-GPL, whatever.
+- macOS 13.0 (Ventura) or later
+- Xcode 15.0 or later (for building)
+- A connected camera (built-in or external)
+
+## License
+
+Public Domain - This software is released into the Public Domain. You can do whatever you want with it.

@@ -2,11 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIdentifier</key>
+	<string>net.iharder.imagesnap</string>
 	<key>CFBundleName</key>
 	<string>imagesnap</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleVersion</key>
+	<string>0.3.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.3.0</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Captures images from the command line</string>
+	<string>imagesnap needs camera access to capture photos from your webcam.</string>
+	<key>NSPrincipalClass</key>
+	<string></string>
 </dict>
 </plist>

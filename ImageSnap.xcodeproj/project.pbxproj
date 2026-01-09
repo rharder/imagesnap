@@ -3,22 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		007BE2EC1C011FD100232768 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 007BE2EB1C011FD100232768 /* main.m */; };
-		007BE2F11C0168F400232768 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 007BE2F01C0168F400232768 /* AVFoundation.framework */; };
-		8DD76F790486A8DE00D96B5E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AB6884FE841BABC02AAC07 /* CoreFoundation.framework */; };
-		D44480A7105BFF5600756CA8 /* ImageSnap.m in Sources */ = {isa = PBXBuildFile; fileRef = D44480A6105BFF5600756CA8 /* ImageSnap.m */; };
-		D48D572910598E4000885DA8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48D572810598E4000885DA8 /* Cocoa.framework */; };
-		D48D572D10598E4000885DA8 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48D572C10598E4000885DA8 /* Quartz.framework */; };
+		A1B2C3D40001000000000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40002000000000001 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8DD76F7B0486A8DE00D96B5E /* CopyFiles */ = {
+		A1B2C3D40003000000000001 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
@@ -28,297 +23,264 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		007BE2EB1C011FD100232768 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		007BE2F01C0168F400232768 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		09AB6884FE841BABC02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
-		D419DEDE25EE897A0049EC87 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		D44480A5105BFF5600756CA8 /* ImageSnap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageSnap.h; sourceTree = "<group>"; };
-		D44480A6105BFF5600756CA8 /* ImageSnap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageSnap.m; sourceTree = "<group>"; };
-		D48D572810598E4000885DA8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		D48D572C10598E4000885DA8 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
-		D49065E025FBEE2F006EF5E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D491567029678DF2002E5942 /* dev-push-notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "dev-push-notes.txt"; sourceTree = "<group>"; };
-		D4C1B149105C049B00FCB6A2 /* imagesnap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imagesnap; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D40002000000000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A1B2C3D40004000000000001 /* imagesnap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imagesnap; sourceTree = BUILT_PRODUCTS_DIR; };
+		D409AE3C2F0F551C00FA9D2E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8DD76F780486A8DE00D96B5E /* Frameworks */ = {
+		A1B2C3D40005000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				007BE2F11C0168F400232768 /* AVFoundation.framework in Frameworks */,
-				8DD76F790486A8DE00D96B5E /* CoreFoundation.framework in Frameworks */,
-				D48D572910598E4000885DA8 /* Cocoa.framework in Frameworks */,
-				D48D572D10598E4000885DA8 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08FB7794FE84155DC02AAC07 /* ImageSnap */ = {
+		A1B2C3D40006000000000001 = {
 			isa = PBXGroup;
 			children = (
-				08FB7795FE84155DC02AAC07 /* Source */,
-				C6859E96029091FE04C91782 /* Documentation */,
-				08FB779DFE84155DC02AAC07 /* Frameworks */,
-				19C28FBDFE9D53C911CA2CBB /* Products */,
+				D409AE3C2F0F551C00FA9D2E /* README.md */,
+				A1B2C3D40002000000000001 /* main.swift */,
+				A1B2C3D40007000000000001 /* Products */,
 			);
-			name = ImageSnap;
 			sourceTree = "<group>";
 		};
-		08FB7795FE84155DC02AAC07 /* Source */ = {
+		A1B2C3D40007000000000001 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D44480A5105BFF5600756CA8 /* ImageSnap.h */,
-				D44480A6105BFF5600756CA8 /* ImageSnap.m */,
-				007BE2EB1C011FD100232768 /* main.m */,
-				D49065E025FBEE2F006EF5E1 /* Info.plist */,
-			);
-			name = Source;
-			sourceTree = "<group>";
-		};
-		08FB779DFE84155DC02AAC07 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				007BE2F01C0168F400232768 /* AVFoundation.framework */,
-				09AB6884FE841BABC02AAC07 /* CoreFoundation.framework */,
-				D48D572810598E4000885DA8 /* Cocoa.framework */,
-				D48D572C10598E4000885DA8 /* Quartz.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		19C28FBDFE9D53C911CA2CBB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D4C1B149105C049B00FCB6A2 /* imagesnap */,
+				A1B2C3D40004000000000001 /* imagesnap */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		C6859E96029091FE04C91782 /* Documentation */ = {
-			isa = PBXGroup;
-			children = (
-				D491567029678DF2002E5942 /* dev-push-notes.txt */,
-				D419DEDE25EE897A0049EC87 /* README.md */,
-			);
-			name = Documentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8DD76F740486A8DE00D96B5E /* imagesnap */ = {
+		A1B2C3D40008000000000001 /* imagesnap */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB924708733DCA0010E9CD /* Build configuration list for PBXNativeTarget "imagesnap" */;
+			buildConfigurationList = A1B2C3D40009000000000001 /* Build configuration list for PBXNativeTarget "imagesnap" */;
 			buildPhases = (
-				8DD76F760486A8DE00D96B5E /* Sources */,
-				8DD76F780486A8DE00D96B5E /* Frameworks */,
-				8DD76F7B0486A8DE00D96B5E /* CopyFiles */,
-				007BE2EE1C01548D00232768 /* ShellScript */,
+				A1B2C3D4000A000000000001 /* Sources */,
+				A1B2C3D40005000000000001 /* Frameworks */,
+				A1B2C3D40003000000000001 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = imagesnap;
-			productName = ImageSnap;
-			productReference = D4C1B149105C049B00FCB6A2 /* imagesnap */;
+			productName = imagesnap;
+			productReference = A1B2C3D40004000000000001 /* imagesnap */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		08FB7793FE84155DC02AAC07 /* Project object */ = {
+		A1B2C3D4000B000000000001 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1240;
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					8DD76F740486A8DE00D96B5E = {
-						DevelopmentTeam = R8E25T8CZ5;
+					A1B2C3D40008000000000001 = {
+						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = 1DEB924B08733DCA0010E9CD /* Build configuration list for PBXProject "ImageSnap" */;
-			compatibilityVersion = "Xcode 11.0";
+			buildConfigurationList = A1B2C3D4000C000000000001 /* Build configuration list for PBXProject "ImageSnap" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
-			hasScannedForEncodings = 1;
+			hasScannedForEncodings = 0;
 			knownRegions = (
-				Base,
 				en,
+				Base,
 			);
-			mainGroup = 08FB7794FE84155DC02AAC07 /* ImageSnap */;
+			mainGroup = A1B2C3D40006000000000001;
+			productRefGroup = A1B2C3D40007000000000001 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DD76F740486A8DE00D96B5E /* imagesnap */,
+				A1B2C3D40008000000000001 /* imagesnap */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		007BE2EE1C01548D00232768 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# I don't know where this \"ObjClean\" thing came from, but it\n# is giving me warnings when I build. -Rob Harder March 2021\n#if [[ -z ${SKIP_OBJCLEAN} || ${SKIP_OBJCLEAN} != 1 ]]; then\n#if [[ -d \"${LOCAL_APPS_DIR}/Objective-Clean.app\" ]]; then\n#\"${LOCAL_APPS_DIR}\"/Objective-Clean.app/Contents/Resources/ObjClean.app/Contents/MacOS/ObjClean \"${SRCROOT}\"\n#else\n#echo \"warning: You have to install and set up Objective-Clean to use its features!\"\n#fi\n#fi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		8DD76F760486A8DE00D96B5E /* Sources */ = {
+		A1B2C3D4000A000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				007BE2EC1C011FD100232768 /* main.m in Sources */,
-				D44480A7105BFF5600756CA8 /* ImageSnap.m in Sources */,
+				A1B2C3D40001000000000001 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB924808733DCA0010E9CD /* Debug */ = {
+		A1B2C3D4000D000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				DEVELOPMENT_TEAM = R8E25T8CZ5;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /usr/local/bin;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = net.iharder.imagesnap;
-				PRODUCT_NAME = imagesnap;
-				RUN_CLANG_STATIC_ANALYZER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		1DEB924908733DCA0010E9CD /* Release */ = {
+		A1B2C3D4000E000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "-";
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				DEVELOPMENT_TEAM = R8E25T8CZ5;
-				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /usr/local/bin;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = net.iharder.imagesnap;
-				PRODUCT_NAME = imagesnap;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
 		};
-		1DEB924C08733DCA0010E9CD /* Debug */ = {
+		A1B2C3D4000F000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
+				CODE_SIGN_ENTITLEMENTS = ImageSnap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Info.plist;
-				PRODUCT_NAME = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		1DEB924D08733DCA0010E9CD /* Release */ = {
+		A1B2C3D40010000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
+				CODE_SIGN_ENTITLEMENTS = ImageSnap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Info.plist;
-				PRODUCT_NAME = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB924708733DCA0010E9CD /* Build configuration list for PBXNativeTarget "imagesnap" */ = {
+		A1B2C3D40009000000000001 /* Build configuration list for PBXNativeTarget "imagesnap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB924808733DCA0010E9CD /* Debug */,
-				1DEB924908733DCA0010E9CD /* Release */,
+				A1B2C3D4000F000000000001 /* Debug */,
+				A1B2C3D40010000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB924B08733DCA0010E9CD /* Build configuration list for PBXProject "ImageSnap" */ = {
+		A1B2C3D4000C000000000001 /* Build configuration list for PBXProject "ImageSnap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB924C08733DCA0010E9CD /* Debug */,
-				1DEB924D08733DCA0010E9CD /* Release */,
+				A1B2C3D4000D000000000001 /* Debug */,
+				A1B2C3D4000E000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+	rootObject = A1B2C3D4000B000000000001 /* Project object */;
 }
