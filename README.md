@@ -139,6 +139,14 @@ The following image formats are supported and are determined by the filename ext
 - Xcode 15.0 or later (for building)
 - A connected camera (built-in or external)
 
+## Old Versions
+
+If you want the old Objective-C version of this tool, you can grab it like so:
+
+```shell
+git checkout v0.2.16
+```
+
 ## License
 
 Public Domain - This software is released into the Public Domain. You can do whatever you want with it.
