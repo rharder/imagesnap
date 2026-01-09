@@ -26,6 +26,7 @@
 		A1B2C3D40002000000000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A1B2C3D40004000000000001 /* imagesnap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imagesnap; sourceTree = BUILT_PRODUCTS_DIR; };
 		D409AE3C2F0F551C00FA9D2E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D409AE3D2F11591400FA9D2E /* dev-push-notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "dev-push-notes.txt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +45,7 @@
 			children = (
 				D409AE3C2F0F551C00FA9D2E /* README.md */,
 				A1B2C3D40002000000000001 /* main.swift */,
+				D409AE3D2F11591400FA9D2E /* dev-push-notes.txt */,
 				A1B2C3D40007000000000001 /* Products */,
 			);
 			sourceTree = "<group>";
