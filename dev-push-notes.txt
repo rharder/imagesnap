@@ -8,6 +8,11 @@ git push --tags
 
 This tags the state.  Don't include a 'v' as in v0.2.14.  Just do the version numbers 0.2.14.
 
+xcodebuild -scheme imagesnap -configuration Release \
+    -arch arm64 -arch x86_64 \
+    ONLY_ACTIVE_ARCH=NO \
+    SYMROOT=./build
+
 Then go to github to the release page https://github.com/rharder/imagesnap/releases
 
 Select "Draft a new release" and select the tag above, eg, 0.2.14. 
@@ -17,7 +22,7 @@ adding it to the release, but it's only the x64 version, not arm.
 
 Then do a homebrew update:
 
-brew bump-formula-pr --strict imagesnap --tag=v0.3.1 --version=0.3.1
+brew bump-formula-pr --strict imagesnap --tag=v0.3.0.2 --version=0.3.0.2
 
 This updates homebrew but I think a homebrew staff human reviews it before it goes final.
 
