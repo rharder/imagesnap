@@ -5,7 +5,7 @@ import Foundation
 
 // MARK: - Version
 
-let VERSION = "0.3.0.2"
+let VERSION = "0.3.0"
 
 // MARK: - Command Line Argument Parser
 

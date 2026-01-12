@@ -141,11 +141,23 @@ The following image formats are supported and are determined by the filename ext
 
 ## Old Versions
 
-If you want the old Objective-C version of this tool, you can grab it like so:
+If you want the old Objective-C version of this tool, you can grab that from the
+releases section or use git to grab the old repo.
+
+You can grab it like so:
 
 ```shell
 git checkout v0.2.16
 ```
+
+I did a complete rewrite in Swift, but that brings the compatibility down, or up
+depending on how you count, to only work on later versions of MacOS.  The previous
+Objective-C version goes way back, and XCode complains about old frameworks.
+
+I'm kind of leaning toward going back to the Objective-C version so that people
+with older MacBooks and what not can still use this tool.  If this is causing
+you problems, please let me know.
+
 
 ## License
 
