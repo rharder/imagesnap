@@ -20,50 +20,90 @@ struct Arguments {
     var maxCaptures: Int? = nil    // -n flag: limit number of timelapse pictures
     var filename: String = "snapshot.jpg"
     
-    static func parse() -> Arguments {
+    static func parse() -> Arguments? {
         var args = Arguments()
         let arguments = CommandLine.arguments
         var i = 1
+        var positionalArgs: [String] = []
         
         while i < arguments.count {
             let arg = arguments[i]
             
-            switch arg {
-            case "-h":
-                args.showHelp = true
-            case "-v":
-                args.verbose = true
-            case "-q":
-                args.quiet = true
-            case "-l":
-                args.listDevices = true
-            case "-d":
-                i += 1
-                if i < arguments.count {
+            // Handle flags
+            if arg.hasPrefix("-") && arg.count > 1 {
+                switch arg {
+                case "-h":
+                    args.showHelp = true
+                case "-v":
+                    args.verbose = true
+                case "-q":
+                    args.quiet = true
+                case "-l":
+                    args.listDevices = true
+                case "-d":
+                    i += 1
+                    if i >= arguments.count {
+                        Output.error("Error: -d requires a device name argument.")
+                        return nil
+                    }
                     args.deviceName = arguments[i]
+                case "-w":
+                    i += 1
+                    if i >= arguments.count {
+                        Output.error("Error: -w requires a delay value.")
+                        return nil
+                    }
+                    if let delay = Double(arguments[i]) {
+                        args.warmupDelay = delay
+                    } else {
+                        Output.error("Error: -w requires a numeric value.")
+                        return nil
+                    }
+                case "-t":
+                    i += 1
+                    if i >= arguments.count {
+                        Output.error("Error: -t requires an interval value.")
+                        return nil
+                    }
+                    if let interval = Double(arguments[i]) {
+                        args.timelapse = interval
+                    } else {
+                        Output.error("Error: -t requires a numeric value.")
+                        return nil
+                    }
+                case "-n":
+                    i += 1
+                    if i >= arguments.count {
+                        Output.error("Error: -n requires a count value.")
+                        return nil
+                    }
+                    if let count = Int(arguments[i]) {
+                        args.maxCaptures = count
+                    } else {
+                        Output.error("Error: -n requires an integer value.")
+                        return nil
+                    }
+                default:
+                    Output.error("Error: Unknown option '" + arg + "'. Use -h for help.")
+                    return nil
                 }
-            case "-w":
-                i += 1
-                if i < arguments.count, let delay = Double(arguments[i]) {
-                    args.warmupDelay = delay
-                }
-            case "-t":
-                i += 1
-                if i < arguments.count, let interval = Double(arguments[i]) {
-                    args.timelapse = interval
-                }
-            case "-n":
-                i += 1
-                if i < arguments.count, let count = Int(arguments[i]) {
-                    args.maxCaptures = count
-                }
-            default:
-                // If it's not a flag, treat as filename
-                if !arg.hasPrefix("-") {
-                    args.filename = arg
-                }
+            } else {
+                // Positional argument - treat as filename
+                positionalArgs.append(arg)
             }
+            
             i += 1
+        }
+        
+        // Use last positional argument as filename
+        if !positionalArgs.isEmpty {
+            args.filename = positionalArgs.last!
+        }
+        
+        // Validate conflicting flags
+        if args.quiet && args.verbose {
+            Output.error("Error: Cannot use both -q and -v flags.")
+            return nil
         }
         
         return args
@@ -260,46 +300,6 @@ class CameraManager: NSObject {
         
         return capturedImage
     }
-    
-    func saveImage(_ image: NSImage, to path: String) -> Bool {
-        guard let tiffData = image.tiffRepresentation,
-              let bitmapRep = NSBitmapImageRep(data: tiffData) else {
-            Output.error("Error: Could not process image data.")
-            return false
-        }
-        
-        let fileExtension = (path as NSString).pathExtension.lowercased()
-        let fileType: NSBitmapImageRep.FileType
-        var properties: [NSBitmapImageRep.PropertyKey: Any] = [:]
-        
-        switch fileExtension {
-        case "png":
-            fileType = .png
-        case "tiff", "tif":
-            fileType = .tiff
-        case "bmp":
-            fileType = .bmp
-        case "gif":
-            fileType = .gif
-        default:
-            fileType = .jpeg
-            properties[.compressionFactor] = 0.9
-        }
-        
-        guard let imageData = bitmapRep.representation(using: fileType, properties: properties) else {
-            Output.error("Error: Could not encode image.")
-            return false
-        }
-        
-        do {
-            let url = URL(fileURLWithPath: path)
-            try imageData.write(to: url)
-            return true
-        } catch {
-            Output.error("Error saving image: \(error.localizedDescription)")
-            return false
-        }
-    }
 }
 
 // MARK: - AVCapturePhotoCaptureDelegate
@@ -368,10 +368,143 @@ func findStartingSequenceNumber(base: String) -> Int {
     return maxNumber + 1
 }
 
+// MARK: - Path Validation
+
+func validateOutputPath(_ path: String) -> String? {
+    // Empty path is invalid
+    guard !path.isEmpty else {
+        Output.error("Error: Output path cannot be empty.")
+        return nil
+    }
+    
+    // Get the current working directory
+    let currentDir = FileManager.default.currentDirectoryPath
+    
+    // Resolve the full path (expands tilde, resolves relative paths)
+    let fullPath: String
+    if path.hasPrefix("/") {
+        // Absolute path
+        fullPath = path
+    } else {
+        // Relative path - resolve from current directory
+        fullPath = (currentDir as NSString).appendingPathComponent(path)
+    }
+    
+    // Expand tilde
+    let expandedPath = (fullPath as NSString).expandingTildeInPath
+    
+    // Resolve symlinks
+    let url = URL(fileURLWithPath: expandedPath)
+    let resolvedURL = url.resolvingSymlinksInPath()
+    let resolvedPath = resolvedURL.path
+    
+    // Check for path traversal - ensure the resolved path is within current directory
+    // or is a direct child of current directory for absolute paths starting with /
+    // For security, we allow absolute paths but warn about them
+    
+    // Check if the path contains ".." components (path traversal attempt)
+    let pathComponents = resolvedPath.components(separatedBy: "/")
+    if pathComponents.contains("..") {
+        Output.error("Error: Invalid output path - path traversal detected.")
+        return nil
+    }
+    
+    // For relative paths, ensure they stay within current directory
+    if !path.hasPrefix("/") {
+        let currentDirURL = URL(fileURLWithPath: currentDir)
+        let resolvedCurrentDir = currentDirURL.resolvingSymlinksInPath()
+        
+        // Check if resolved path starts with current directory
+        if !resolvedPath.hasPrefix(resolvedCurrentDir.path) {
+            Output.error("Error: Output path must be within current directory.")
+            return nil
+        }
+    }
+    
+    // Check if parent directory exists and is writable
+    let parentDir = resolvedURL.deletingLastPathComponent()
+    let fileManager = FileManager.default
+    
+    var isDirectory: ObjCBool = false
+    if fileManager.fileExists(atPath: parentDir.path, isDirectory: &isDirectory) {
+        if !isDirectory.boolValue {
+            Output.error("Error: Parent path is not a directory.")
+            return nil
+        }
+    } else {
+        // Try to create parent directory
+        do {
+            try fileManager.createDirectory(atPath: parentDir.path, withIntermediateDirectories: true)
+        } catch {
+            Output.error("Error: Cannot create parent directory: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    return resolvedPath
+}
+
+// MARK: - Atomic File Write
+
+func saveImageAtomically(_ image: NSImage, to finalPath: String) -> Bool {
+    // Validate the path first
+    guard let resolvedPath: String = validateOutputPath(finalPath) else {
+        return false
+    }
+    
+    guard let tiffData = image.tiffRepresentation,
+          let bitmapRep = NSBitmapImageRep(data: tiffData) else {
+        Output.error("Error: Could not process image data.")
+        return false
+    }
+    
+    let fileExtension = (finalPath as NSString).pathExtension.lowercased()
+    let fileType: NSBitmapImageRep.FileType
+    var properties: [NSBitmapImageRep.PropertyKey: Any] = [:]
+    
+    switch fileExtension {
+    case "png":
+        fileType = .png
+    case "tiff", "tif":
+        fileType = .tiff
+    case "bmp":
+        fileType = .bmp
+    case "gif":
+        fileType = .gif
+    default:
+        fileType = .jpeg
+        properties[.compressionFactor] = 0.9
+    }
+    
+    guard let imageData = bitmapRep.representation(using: fileType, properties: properties) else {
+        Output.error("Error: Could not encode image.")
+        return false
+    }
+    
+    do {
+        // Create a temporary file in the same directory
+        let finalURL = URL(fileURLWithPath: resolvedPath)
+        let tempURL = finalURL.appendingPathExtension("tmp")
+        
+        // Write to temp file
+        try imageData.write(to: tempURL)
+        
+        // Atomically move to final location
+        try FileManager.default.moveItem(at: tempURL, to: finalURL)
+        
+        return true
+    } catch {
+        Output.error("Error saving image: \(error.localizedDescription)")
+        return false
+    }
+}
+
 // MARK: - Main Execution
 
 func main() -> Int32 {
-    let args = Arguments.parse()
+    guard let args = Arguments.parse() else {
+        return 1
+    }
     
     Output.quiet = args.quiet
     Output.verbose = args.verbose
@@ -470,7 +603,7 @@ func main() -> Int32 {
                 return 1
             }
             
-            if camera.saveImage(image, to: outputPath) {
+            if saveImageAtomically(image, to: outputPath) {
                 Output.log(outputPath)
             } else {
                 Output.error("Error: Failed to save image to \(outputPath)")
@@ -496,7 +629,7 @@ func main() -> Int32 {
             return 1
         }
         
-        if camera.saveImage(image, to: args.filename) {
+        if saveImageAtomically(image, to: args.filename) {
             Output.log(args.filename)
         } else {
             Output.error("Error: Failed to save image to \(args.filename)")
