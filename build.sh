@@ -106,6 +106,12 @@ check_xcode_project() {
     fi
 }
 
+describe_archs() {
+    # Compact architecture list from lipo, e.g. "arm64 x86_64"
+    lipo -info "$1" 2>/dev/null | sed -e 's/^Architectures in the fat file: .* are: //' \
+                                      -e 's/^Non-fat file: .* is architecture: //'
+}
+
 #######################################
 # Build Functions
 #######################################
@@ -127,6 +133,9 @@ build_with_xcodebuild() {
         -project "${XCODE_PROJECT}" \
         -scheme "${PROJECT_NAME}" \
         -configuration "${config}" \
+        -arch arm64 \
+        -arch x86_64 \
+        ONLY_ACTIVE_ARCH=NO \
         -derivedDataPath "${build_dir}" \
         SYMROOT="${BUILD_DIR}" \
         OBJROOT="${BUILD_DIR}/Intermediates" \
@@ -135,21 +144,21 @@ build_with_xcodebuild() {
     # Find the built binary
     local binary_path="${BUILD_DIR}/${config}/${PROJECT_NAME}"
     if [ -f "${binary_path}" ]; then
-        log_success "Built: ${binary_path}"
+        log_success "Built: ${binary_path} [$(describe_archs "${binary_path}")]"
         return 0
     fi
     
     # Try alternative locations
     binary_path=$(find "${build_dir}" -name "${PROJECT_NAME}" -type f -perm +001 2>/dev/null | head -1)
     if [ -f "${binary_path}" ]; then
-        log_success "Built: ${binary_path}"
+        log_success "Built: ${binary_path} [$(describe_archs "${binary_path}")]"
         return 0
     fi
     
     # Also search the entire build directory
     binary_path=$(find "${BUILD_DIR}" -name "${PROJECT_NAME}" -type f -perm +001 2>/dev/null | head -1)
     if [ -f "${binary_path}" ]; then
-        log_success "Built: ${binary_path}"
+        log_success "Built: ${binary_path} [$(describe_archs "${binary_path}")]"
         return 0
     fi
     
@@ -162,14 +171,11 @@ build_with_swiftc() {
     local output_dir="${BUILD_DIR}/swiftc/${config}"
     local binary_path="${output_dir}/${PROJECT_NAME}"
     
-    log_info "Building with swiftc (${config} configuration)..."
+    log_info "Building universal binary with swiftc (${config} configuration)..."
     
     mkdir -p "${output_dir}"
     
-    local swiftc_flags=(
-        "-o" "${binary_path}"
-        "${SOURCE_FILE}"
-    )
+    local swiftc_flags=("${SOURCE_FILE}")
     
     # Add optimization based on configuration
     if [ "${config}" = "Release" ]; then
@@ -183,11 +189,20 @@ build_with_swiftc() {
         swiftc_flags+=("-framework" "${framework}")
     done
     
-    log_info "Running: swiftc ${swiftc_flags[*]}"
-    swiftc "${swiftc_flags[@]}"
+    # swiftc has no -arch flag: compile each slice with -target, then merge with lipo
+    local arch
+    local slice_paths=()
+    for arch in arm64 x86_64; do
+        local slice_path="${output_dir}/${PROJECT_NAME}-${arch}"
+        swiftc "-target" "${arch}-apple-macos13" "-o" "${slice_path}" "${swiftc_flags[@]}"
+        slice_paths+=("${slice_path}")
+    done
+    
+    lipo -create -output "${binary_path}" "${slice_paths[@]}"
+    rm -f "${slice_paths[@]}"
     
     if [ -f "${binary_path}" ]; then
-        log_success "Built: ${binary_path}"
+        log_success "Built: ${binary_path} [$(describe_archs "${binary_path}")]"
         return 0
     fi
     
