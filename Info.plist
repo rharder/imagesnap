@@ -7,9 +7,9 @@
 	<key>CFBundleName</key>
 	<string>imagesnap</string>
 	<key>CFBundleVersion</key>
-	<string>0.3.0</string>
+	<string>0.3.1</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.3.0</string>
+	<string>0.3.1</string>
 	<key>NSCameraUsageDescription</key>
 	<string>imagesnap needs camera access to capture photos from your webcam.</string>
 	<key>NSPrincipalClass</key>

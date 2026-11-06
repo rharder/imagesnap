@@ -103,7 +103,7 @@ Capturing image from device "FaceTime HD Camera"...snapshot.jpg
 
 ```
 USAGE: imagesnap [options] [filename]
-Version: 0.3.0
+Version: 0.3.1
 Captures an image from a video device and saves it in a file.
 If no device is specified, the system default will be used.
 If no filename is specified, snapshot.jpg will be used.
@@ -131,6 +131,11 @@ The following image formats are supported and are determined by the filename ext
 
 ## Changes
 
+- v0.3.1 - Bug fixes: saving over an existing file no longer fails, `~/...` paths
+  now expand to the home directory instead of creating a literal `~` folder,
+  timelapse sequence detection works with filenames containing regex special
+  characters (e.g. parentheses), relative paths work when the working directory
+  lives under /tmp or /var, and Ctrl-C during a timelapse exits cleanly.
 - v0.3.0 - Complete rewrite in Swift using AVFoundation. Supports macOS 13+.
 
 ## Requirements

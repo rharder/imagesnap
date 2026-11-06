@@ -5,7 +5,7 @@ import Foundation
 
 // MARK: - Version
 
-let VERSION = "0.3.0"
+let VERSION = "0.3.1"
 
 // MARK: - Command Line Argument Parser
 
@@ -350,7 +350,11 @@ func findStartingSequenceNumber(base: String) -> Int {
     
     do {
         let files = try fileManager.contentsOfDirectory(atPath: workingDir)
-        let pattern = "\(nameWithoutExt)-(\\d+)\\.\(ext)"
+        // Escape the name/extension: characters like ( ) . * would otherwise be
+        // interpreted as regex syntax and silently break sequence detection
+        let pattern = NSRegularExpression.escapedPattern(for: nameWithoutExt)
+            + "-(\\d+)\\."
+            + NSRegularExpression.escapedPattern(for: ext)
         let regex = try NSRegularExpression(pattern: pattern, options: [])
         
         for file in files {
@@ -370,6 +374,25 @@ func findStartingSequenceNumber(base: String) -> Int {
 
 // MARK: - Path Validation
 
+/// Lexically normalizes a path: collapses ".", ".." and duplicate separators
+/// without touching the filesystem. Symlink resolution is not reliable for
+/// paths that don't exist yet (e.g. the output file), and macOS resolves
+/// /private/var and /var inconsistently depending on existence.
+private func lexicallyNormalized(_ path: String) -> String {
+    var components: [String] = []
+    for component in path.components(separatedBy: "/") {
+        switch component {
+        case "", ".":
+            continue
+        case "..":
+            if !components.isEmpty { components.removeLast() }
+        default:
+            components.append(component)
+        }
+    }
+    return "/" + components.joined(separator: "/")
+}
+
 func validateOutputPath(_ path: String) -> String? {
     // Empty path is invalid
     guard !path.isEmpty else {
@@ -380,21 +403,22 @@ func validateOutputPath(_ path: String) -> String? {
     // Get the current working directory
     let currentDir = FileManager.default.currentDirectoryPath
     
-    // Resolve the full path (expands tilde, resolves relative paths)
+    // Expand tilde first so "~/pic.jpg" resolves to the user's home directory
+    // instead of a literal '~' folder inside the current directory
+    let expandedPath = (path as NSString).expandingTildeInPath
+    
+    // Resolve the full path (resolves relative paths against current directory)
     let fullPath: String
-    if path.hasPrefix("/") {
+    if expandedPath.hasPrefix("/") {
         // Absolute path
-        fullPath = path
+        fullPath = expandedPath
     } else {
         // Relative path - resolve from current directory
-        fullPath = (currentDir as NSString).appendingPathComponent(path)
+        fullPath = (currentDir as NSString).appendingPathComponent(expandedPath)
     }
     
-    // Expand tilde
-    let expandedPath = (fullPath as NSString).expandingTildeInPath
-    
     // Resolve symlinks
-    let url = URL(fileURLWithPath: expandedPath)
+    let url = URL(fileURLWithPath: fullPath)
     let resolvedURL = url.resolvingSymlinksInPath()
     let resolvedPath = resolvedURL.path
     
@@ -409,13 +433,17 @@ func validateOutputPath(_ path: String) -> String? {
         return nil
     }
     
-    // For relative paths, ensure they stay within current directory
-    if !path.hasPrefix("/") {
-        let currentDirURL = URL(fileURLWithPath: currentDir)
-        let resolvedCurrentDir = currentDirURL.resolvingSymlinksInPath()
+    // For relative paths, ensure they stay within the current directory.
+    // Compare lexically normalized paths so the check doesn't depend on
+    // symlink resolution (which breaks when the cwd is under /tmp or /var,
+    // where getcwd returns the "/private/..." form but URL resolution
+    // doesn't).
+    if !expandedPath.hasPrefix("/") {
+        let normalizedPath = lexicallyNormalized(fullPath)
+        let normalizedCurrentDir = lexicallyNormalized(currentDir)
+        let dirPrefix = normalizedCurrentDir == "/" ? "/" : normalizedCurrentDir + "/"
         
-        // Check if resolved path starts with current directory
-        if !resolvedPath.hasPrefix(resolvedCurrentDir.path) {
+        if normalizedPath != normalizedCurrentDir && !normalizedPath.hasPrefix(dirPrefix) {
             Output.error("Error: Output path must be within current directory.")
             return nil
         }
@@ -482,15 +510,28 @@ func saveImageAtomically(_ image: NSImage, to finalPath: String) -> Bool {
     }
     
     do {
-        // Create a temporary file in the same directory
+        // Create a temporary file in the same directory with a unique name so
+        // concurrent runs (or leftover temp files from a crashed run) can't collide
         let finalURL = URL(fileURLWithPath: resolvedPath)
-        let tempURL = finalURL.appendingPathExtension("tmp")
+        let tempURL = finalURL.deletingLastPathComponent()
+            .appendingPathComponent("\(UUID().uuidString).tmp")
         
         // Write to temp file
         try imageData.write(to: tempURL)
         
-        // Atomically move to final location
-        try FileManager.default.moveItem(at: tempURL, to: finalURL)
+        do {
+            // Remove any existing file first: moveItem fails if the destination exists
+            if FileManager.default.fileExists(atPath: finalURL.path) {
+                try FileManager.default.removeItem(at: finalURL)
+            }
+            
+            // Atomically move to final location
+            try FileManager.default.moveItem(at: tempURL, to: finalURL)
+        } catch {
+            // Don't leave temp litter behind on failure
+            try? FileManager.default.removeItem(at: tempURL)
+            throw error
+        }
         
         return true
     } catch {
@@ -581,11 +622,17 @@ func main() -> Int32 {
         var captureCount = 0
         var sequenceNumber = findStartingSequenceNumber(base: args.filename)
         
-        // Set up signal handler for graceful exit
-        signal(SIGINT) { _ in
+        // Graceful Ctrl-C exit. A DispatchSource turns the signal into a normal
+        // event on a regular queue, where it is safe to print and clean up.
+        // (Calling print/exit directly from a signal handler is undefined behavior.)
+        signal(SIGINT, SIG_IGN)
+        let sigintSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: DispatchQueue.global())
+        sigintSource.setEventHandler {
             Output.log("\nTimelapse stopped.")
+            camera.stopSession()
             exit(0)
         }
+        sigintSource.resume()
         
         while true {
             captureCount += 1
